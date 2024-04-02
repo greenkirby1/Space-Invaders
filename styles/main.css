@@ -1,7 +1,61 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    min-width: 100vh;
+}
+
 .start-container {
-    visibility: hidden;
+    display: none;
+}
+
+.game-container {
+    /* visibility: hidden; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .end-container {
+    display: none;
+}
+
+.top-wrapper {
+    width: 85vmin;
+    display: flex;
+    justify-content: space-between;
+    padding: 4vmin 0;
+}
+
+.game-grid {
+    height: 85vmin;
+    width: 85vmin;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.game-grid > div {
+    border: 1px solid lightgrey;
+    display: inline-block;
+}
+
+.bottom-wrapper {
+    width: 85vmin;
+    display: flex;
+    justify-content: right;
+    padding: 4vmin 0;
+}
+
+#pause {
+    margin-left: 3vmin;
+}
+
+/* in-game elements */
+.player {
     
 }

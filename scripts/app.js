@@ -13,11 +13,41 @@
 
 
 // ? Constant variables
-// - Grid: 16 rows x 30 columns
+const grid = document.querySelector('.game-grid')
+const startPosition = 297
 
+// ? Generate game grid
+const cols = 17
+const rows = 18
+const cellCount = cols * rows
+
+const cells = []
+
+function makeGrid() {
+    for (let i = 0; i < cellCount; i++) {
+        const cell = document.createElement('div')
+        cell.innerText = i // delete when done
+        cell.style.width = `${100 / cols}%`
+        cell.style.height = `${100 / rows}%`
+        cells.push(cell)
+        cells.forEach((cell) => {
+            const cellId = `${cells.indexOf(cell)}`
+            return cell.dataset.id = cellId
+        })    
+        grid.append(cell)
+        // console.log(cells)
+        if (i === startPosition) {
+            cell.classList.add('player')
+            // console.log(cells[297])
+        }
+    }
+}
+
+makeGrid()
 
 // ? State changing variables
-// - lives
+let lives
+let score
 
 // - invaders state
 //   - array with nums specificing starting positions of invaders
@@ -61,8 +91,6 @@
 //          - score(sum of total score) += 100
 //     }
 
-// - gameplay score
-//   - let score
 
 // ~ setInterval time decrement
 //   ~ for (invaders row change === true) {
@@ -87,6 +115,8 @@
 
 
 // ? Event listners
+// document.addEventListner('keydown', playerMove)
+// document.addEventListener('keyup', playerShoot)
 // startBtn.addEventListner('click', init)
 // pauseBtn.addEventListener('click', pause)
 // playAgainBtn.addEventListner('click', init)
@@ -98,7 +128,7 @@
 
 
 function init() {
-    // make grid
+    makeGrid()
     // delay for 2000ms then start game
 }
 
@@ -107,5 +137,13 @@ function pause() {
 }
 
 function soundOff() {
+
+}
+
+function playerMove(evt) {
+    let currPosition 
+}
+
+function playerShoot() {
 
 }
