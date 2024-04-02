@@ -20,7 +20,10 @@
 // - lives
 
 // - invaders state
+//   - array with nums specificing starting positions of invaders
+//   - forEach to add classes to invaders
 //   - movement side to side at setInterval()
+//   - after reaching one side of grid invaders move down one row as a whole
 //   - position reset to start position when player clicks play again btn
 
 // - player state
