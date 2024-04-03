@@ -30,6 +30,11 @@ body {
     padding: 4vmin 0;
 }
 
+#score-display, #lives-display {
+    border: 1px solid black;
+    padding: 1.5vmin;
+}
+
 .game-grid {
     height: 85vmin;
     width: 85vmin;
@@ -68,4 +73,8 @@ body {
 
 .swat {
     background-image: url('../assets/Fly-swat.png');
+}
+
+.invader {
+    background-image: url('../assets/Pixel-fly-1.png');
 }

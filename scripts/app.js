@@ -49,6 +49,7 @@ makeGrid()
 let lives
 let score
 let playerCurrPos = blks.indexOf(document.querySelector('.player'))
+let classNames 
 let invadersStartPos = [
     [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
     [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
@@ -58,14 +59,12 @@ let invadersStartPos = [
 ]
 
 // - invaders state
-//   - array with nums specificing starting positions of invaders
-//   - forEach to add classes to invaders
+//   ~ forEach to add classes to invaders
 //   - movement side to side at setInterval()
 //   - after reaching one side of grid invaders move down one row as a whole
 //   - position reset to start position when player clicks play again btn
 
 // - player state
-//   - movement right/left using rightArrow/leftArrow or A/D
 //   - laser created when space bar is pressed
 //   - if (lives === 0 || invaders are in the same row as player) {
 //          - element.classLIst.add('explosion')
@@ -92,86 +91,127 @@ let invadersStartPos = [
 
 // ~ setInterval time decrement
 //   ~ for (invaders row change === true) {
-    //          ~ interval++
-    //   ~ }
+//          ~ interval++
+//   ~ }
     
-    // ~ leaderboard
-    //   ~ leaderboard using localStorage
-    
-    
-    // ? Cached elements
-    // - start game button
-    //   - const startBtn = document.getElementById('start')
-    // - pause/resume button
-    //   - const pauseBtn = document.getElementById('pause')
-    // - play again button
-    //   - const playAgainBtn = document.getElementById('play-again')
-    // ~ mute button
-    //   ~ mute audio when audio is playing
-    //   ~ when audio is muted it can be unmuted
-    //   ~ const muteBtn = document.getElementById('mute')
+// ~ leaderboard
+//   ~ leaderboard using localStorage
     
     
-    // ? Event listners
-    document.addEventListener('keydown', playerMove)
-    document.addEventListener('keyup', playerShoot)
-    // startBtn.addEventListener('click', init)
-    // pauseBtn.addEventListener('click', pause)
-    // playAgainBtn.addEventListener('click', init)
-    // ~ muteBtn.addEventListener('click', soundOff)
+// ? Cached elements
+// - start game button
+//   - const startBtn = document.getElementById('start')
+// - pause/resume button
+//   - const pauseBtn = document.getElementById('pause')
+// - play again button
+//   - const playAgainBtn = document.getElementById('play-again')
+// ~ mute button
+//   ~ mute audio when audio is playing
+//   ~ when audio is muted it can be unmuted
+//   ~ const muteBtn = document.getElementById('mute')
+const scoreEl = document.getElementById('score')
+const livesEl = document.getElementById('lives-display')
+
+
+// ? Event listners
+document.addEventListener('keydown', playerMove)
+document.addEventListener('keyup', playerShoot)
+// startBtn.addEventListener('click', init)
+// pauseBtn.addEventListener('click', pause)
+// playAgainBtn.addEventListener('click', init)
+// ~ muteBtn.addEventListener('click', soundOff)
+
+
+
+// ? Functions
+
+
+function init() {
+    makeGrid()
+    // delay for 2000ms then start game
+    resetGame()
+}
+
+function pause() {
     
+}
+
+function soundOff() {
     
-    
-    // ? Functions
-    
-    
-    function init() {
-        makeGrid()
-        // delay for 2000ms then start game
+}
+
+function resetGame() {
+    //set start position for invaders
+    invadersStartPos.forEach(colArr => {
+        colArr.forEach(blkValue => {
+            blks[blkValue].classList.add('invader')
+            // console.log(blks[blkValue])
+        })
+    })
+
+    //reset score and lives to game start
+    score = 0
+    scoreEl.innerHTML = score
+    lives = 3
+    livesEl.innerHTML = '❤️'.repeat(lives)
+}
+
+function playerMove(evt) {
+    blks[playerCurrPos].classList.remove('player')
+    if (evt.code === 'ArrowLeft' && playerCurrPos !== 289) {
+        playerCurrPos--
+    } else if (evt.code === 'ArrowRight' && playerCurrPos !== 305) {
+        playerCurrPos++
+    } else {
+        console.log("Not Allowed")
     }
+    // console.log(playerCurrPos)
+    blks[playerCurrPos].classList.add('player')
+}
     
-    function pause() {
-        
-    }
-    
-    function soundOff() {
-        
-    }
-    
-    function playerMove(evt) {
-        blks[playerCurrPos].classList.remove('player')
-        if (evt.key === 'ArrowLeft' && playerCurrPos !== 289) {
-            playerCurrPos--
-        } else if (evt.key === 'ArrowRight' && playerCurrPos !== 305) {
-            playerCurrPos++
-        } else {
-            console.log("Not Allowed")
-        }
-        // console.log(playerCurrPos)
-        blks[playerCurrPos].classList.add('player')
-    }
-    
-    function playerShoot(evt) {
-        // console.log(evt.code)
-        let shootOrigin = playerCurrPos - 17
-        // console.log(shootOrigin)
-        if (evt.code === 'Space') {
-            blks[shootOrigin].classList.add('swat')
-            for (let i = shootOrigin; i > playerCurrPos - 289; i -= 17) {
-                
+function playerShoot(evt) {
+    // console.log(evt.code)
+    let shootOrigin = playerCurrPos - cols
+    classNames = ['invader', 'swat']
+
+    // console.log(shootOrigin)
+    if (evt.code === 'Space') {
+        blks[shootOrigin].classList.add('swat')
+        let interval = setInterval(() => {
+            blks[shootOrigin]?.classList.remove('swat')  
+            if (shootOrigin > playerCurrPos - 289) {
+                shootOrigin -= cols
+                blks[shootOrigin].classList.add('swat')
+                console.log(blks[shootOrigin])
+            } else if (shootOrigin === playerCurrPos - 289) {
+                clearInterval(interval)
+            } else if (blks[shootOrigin].classList.cotains('invader' && 'swat')) {
+                score += 100
+                // scoreEl.innerHTML = score
+                // blks[shootOrigin].classList.remove('invader swat')
+                console.log(score)
             }
-        }
-        // - to go up column is += 17
-        // - shootOrigin[playerCurrPos + 17]
-        //   - if (blks with .invader-laser > 4) {
-        //          - disable space bar key shooting laser
-        //          - check whether blks with .invader laser > 4
-        //          - enable laser space bar key if condition not met
-        //     }
-        //   - if (blks with .player-laser && .invader === true) {
-        //          - element.classList.add('explosion')
-        //          - element.classList.remove('invader-laser invader')
-        //          - score(sum of total score) += 100
-        //     }  
+        }, 200)
     }
-    
+
+//   - if (blks with .swat > 4) {
+//          - disable space bar key shooting laser
+//          - check whether blks with .invader laser > 4
+//          - enable laser space bar key if condition not met
+//     }
+//   - if (blks with .player-laser && .invader === true) {
+//          - element.classList.add('explosion')
+//          - element.classList.remove('invader-laser invader')
+    //          - score(sum of total score) += 100
+    //     }  
+}
+
+// function invaderKill() {
+//     blks.forEach(blk => {
+//         if (blks[blk].classList.contains('invader swat')) {
+//             score += 100
+//             scoreEl.innerHTML = score
+//             blks[blk].classList.remove('invader')
+//         }
+//     })
+// }
