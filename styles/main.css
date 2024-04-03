@@ -56,8 +56,16 @@ body {
 }
 
 /* in-game elements */
-.player {
-    background-image: url('../assets/Hand.png');
+.player, .swat, .invader, .invader-goo, .explosion {
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
+}
+
+.player {
+    background-image: url('../assets/Hand.png');
+}
+
+.swat {
+    background-image: url('../assets/Fly-swat.png');
 }
