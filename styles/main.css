@@ -57,5 +57,7 @@ body {
 
 /* in-game elements */
 .player {
-    
+    background-image: url('../assets/Hand.png');
+    background-repeat: no-repeat;
+    background-size: cover;
 }
