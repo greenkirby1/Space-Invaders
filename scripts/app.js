@@ -124,6 +124,7 @@ document.addEventListener('keyup', playerShoot)
 
 
 // ? Functions
+init()
 
 
 function init() {
