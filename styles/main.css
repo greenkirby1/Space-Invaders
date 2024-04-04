@@ -75,6 +75,22 @@ body {
     background-image: url('../assets/Fly-swat.png');
 }
 
-.invader {
+.black {
     background-image: url('../assets/Black-1.png');
+}
+
+.brown {
+    background-image: url('../assets/Brown-1.png');
+}
+
+.green {
+    background-image: url('../assets/Green-1.png');
+}
+
+.purple {
+    background-image: url('../assets/Purple-1.png');
+}
+
+.gold {
+    background-image: url('../assets/Gold-1.png');
 }

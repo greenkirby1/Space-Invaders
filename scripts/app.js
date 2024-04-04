@@ -144,10 +144,23 @@ function soundOff() {
 function resetGame() {
     //set start position for invaders
     invadersStartPos.forEach(colArr => {
+        if (invadersStartPos.indexOf(colArr) === 4) {
+            colArr.forEach(blkValue => {
+                blks[blkValue].classList.add('invader', 'black')
+        })} else if (invadersStartPos.indexOf(colArr) === 3) {
+            colArr.forEach(blkValue => {
+                blks[blkValue].classList.add('invader', 'brown')
+        })} else if (invadersStartPos.indexOf(colArr) === 2) {
         colArr.forEach(blkValue => {
-            blks[blkValue].classList.add('invader')
+            blks[blkValue].classList.add('invader', 'green')
+        })} else if (invadersStartPos.indexOf(colArr) === 1) {
+            colArr.forEach(blkValue => {
+                blks[blkValue].classList.add('invader', 'purple')
+        })} else if (invadersStartPos.indexOf(colArr) === 0) {
+            colArr.forEach(blkValue => {
+                blks[blkValue].classList.add('invader', 'gold')
+        })}
             // console.log(blks[blkValue])
-        })
     })
 
     //reset score and lives to game start
