@@ -193,7 +193,6 @@ function playerShoot(evt) {
                     // console.log(score)
                     clearInterval(interval)
                     blks[shootOrigin].classList.add('dead-fly')
-
                 } else if (blks[shootOrigin].classList.contains('brown')) {
                     score += 200
                     scoreEl.innerHTML = score
@@ -221,13 +220,16 @@ function playerShoot(evt) {
                     blks[shootOrigin].classList.remove('gold', 'swat')
                     clearInterval(interval)
                     blks[shootOrigin].classList.add('dead-fly')
-
                 }
+                
+                setTimeout(() => {
+                    blks[shootOrigin].classList.remove('dead-fly')
+                }, 70)    
             } else {
                 clearInterval(interval)
                 console.log('did 2')
             }
-        }, 80)
+        }, 90)
     }
 
     //   - if (blks with .swat > 4) {
