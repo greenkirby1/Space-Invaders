@@ -26,7 +26,7 @@ const blks = []
 function makeGrid() {
     for (let i = 0; i < blkCount; i++) {
         const blk = document.createElement('div')
-        blk.innerText = i
+        // blk.innerText = i
         blk.style.width = `${100 / cols}%`
         blk.style.height = `${100 / rows}%`
         blks.push(blk)
@@ -43,13 +43,12 @@ function makeGrid() {
     }
 }
 
-makeGrid()
+// makeGrid()
 
 // ? State changing variables
 let lives
 let score
-let playerCurrPos = blks.indexOf(document.querySelector('.player')) //if this comes before makeGrid() player class doesn't exist yet
-let classNames
+let playerCurrPos = 297 //blks.indexOf(document.querySelector('.player')) //if this comes before makeGrid() player class doesn't exist yet
 let invadersCurrPos = [
     [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
     [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
@@ -99,7 +98,7 @@ let invadersCurrPos = [
 
 // ? Cached elements
 // - start game button
-//   - const startBtn = document.getElementById('start')
+const startBtn = document.getElementById('start')
 // - pause/resume button
 //   - const pauseBtn = document.getElementById('pause')
 // - play again button
@@ -110,12 +109,14 @@ let invadersCurrPos = [
 //   ~ const muteBtn = document.getElementById('mute')
 const scoreEl = document.getElementById('score')
 const livesEl = document.getElementById('lives-display')
+const startScreen = document.querySelector('.start-container')
+const gameStartScreen = document.querySelector('.game-container')
 
 
 // ? Event listners
 document.addEventListener('keydown', playerMove)
 document.addEventListener('keyup', playerShoot)
-// startBtn.addEventListener('click', init)
+startBtn.addEventListener('click', init)
 // pauseBtn.addEventListener('click', pause)
 // playAgainBtn.addEventListener('click', init)
 // ~ muteBtn.addEventListener('click', soundOff)
@@ -123,10 +124,15 @@ document.addEventListener('keyup', playerShoot)
 
 
 // ? Functions
-
+init()
 
 function init() {
-    // makeGrid()
+    // console.log(evt.target, 'start clicked')
+    // if (gameStartScreen.style.display === 'none') {
+    //     startScreen.style.display = 'none'
+    //     gameStartScreen.style.display = 'flex'
+    // }
+    makeGrid()
     // delay for 2000ms then start game
     resetGame()
     // invadersMove()
@@ -182,10 +188,40 @@ function playerShoot(evt) {
                 console.log('did 1')
                 if (blks[shootOrigin].classList.contains('black')) {
                     score += 100
-                    // scoreEl.innerHTML = score
-                    // blks[shootOrigin].classList.remove('invader swat')
-                    console.log(score)
+                    scoreEl.innerHTML = score
+                    blks[shootOrigin].classList.remove('black', 'swat')
+                    // console.log(score)
                     clearInterval(interval)
+                    blks[shootOrigin].classList.add('dead-fly')
+
+                } else if (blks[shootOrigin].classList.contains('brown')) {
+                    score += 200
+                    scoreEl.innerHTML = score
+                    blks[shootOrigin].classList.remove('brown', 'swat')
+                    clearInterval(interval)
+                    blks[shootOrigin].classList.add('dead-fly')
+                    
+                } else if (blks[shootOrigin].classList.contains('green')) {
+                    score += 300
+                    scoreEl.innerHTML = score
+                    blks[shootOrigin].classList.remove('green', 'swat')
+                    clearInterval(interval)
+                    blks[shootOrigin].classList.add('dead-fly')
+                    
+                } else if (blks[shootOrigin].classList.contains('purple')) {
+                    score += 500
+                    scoreEl.innerHTML = score
+                    blks[shootOrigin].classList.remove('purple', 'swat')
+                    clearInterval(interval)
+                    blks[shootOrigin].classList.add('dead-fly')
+                    
+                } else if (blks[shootOrigin].classList.contains('gold')) {
+                    score += 1000
+                    scoreEl.innerHTML = score
+                    blks[shootOrigin].classList.remove('gold', 'swat')
+                    clearInterval(interval)
+                    blks[shootOrigin].classList.add('dead-fly')
+
                 }
             } else {
                 clearInterval(interval)
@@ -221,48 +257,31 @@ function playerShoot(evt) {
 function invadersMove() {
     let sideMove = 1
     let downMove = cols
-    // let interval = setInterval(() => {
-    // do {
-    //   invadersCurrPos.forEach(colArr => {
-    //     colArr.forEach(blkValue => {
-    //         blkValue += sideMove
-    //     })
-    //   })  
-    // } while (blkValue < 16)
 
-    // invadersCurrPos.forEach(colArr, colIdx => {
-    //     colArr.forEach(blkValue => {
-    //         if (blkValue < 16) {
-
-    //             blkValue += 1
-    //             console.log(blkValue)
-    //         }
-    //     })
-    // })
-
-    // invadersCurrPos.forEach(colArr => {
-    //     colArr.forEach(blkValue => {
-    //         blks[blkValue].classList.remove('black', 'brown', 'green', 'purple', 'gold')
-
-    //         console.log(blkValue)
-    //         console.log(blkValue)
-    //         until blkValue = end numbers
-    //     })
-    // })
-
-    invadersCurrPos.forEach((colArr, index) => {
+    let interval = setInterval(() => {
+        invadersCurrPos.forEach((colArr, index) => {
         colArr.forEach((blkValue, idx) => {
             //console.log(invadersCurrPos[index][idx]) //getting numbers 
             blks[blkValue].classList.remove('black', 'brown', 'green', 'purple', 'gold')
-            invadersCurrPos[index][idx] += sideMove
+            if (invadersCurrPos[index][idx] % cols < cols - 1) {
+                // console.log(invadersCurrPos[index][idx] % cols)
+                invadersCurrPos[index][idx] += sideMove
+                // console.log(blks[invadersCurrPos[index][idx] + cols])
+            } else if (invadersCurrPos[4][idx] % cols === cols - 1) {
+                invadersCurrPos[index][idx] += downMove
+                console.log(invadersCurrPos[index][idx] += downMove)
+            } else {
+                clearInterval(interval)
+                console.log("you've reached the end")
+            }
+            setInvaders()
             // console.log(invadersCurrPos[index][idx])
+            })
         })
-    })
+    }, 1000)
 
     // console.log(invadersCurrPos)
-    setInvaders()
-
-
+    // setInvaders()
 }
 
 function setInvaders() {

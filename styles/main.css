@@ -10,11 +10,56 @@ body {
 
 .start-container {
     display: none;
+    /* display: flex; */
+    align-items: center;
+    justify-content: center;
+    height: 100vmin;
+}
+
+.start-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    font-size: 7vmin;
+}
+
+.rules {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    font-size: 3.5vmin;
+}
+
+li {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 1.5vmin;
+}
+
+.flies {
+    width: 7vmin;
+    height: 7vmin;
+}
+
+#start {
+    font-size: 4vmin;
+    padding: 1.5vmin 5vmin;
+    margin: 4vmin;
+    border: none;
+    border-radius: 10px;
 }
 
 .game-container {
     /* visibility: hidden; */
     display: flex;
+    /* display: none; */
     flex-direction: column;
     align-items: center;
 }
@@ -30,7 +75,8 @@ body {
     padding: 4vmin 0;
 }
 
-#score-display, #lives-display {
+#score-display,
+#lives-display {
     border: 1px solid black;
     padding: 1.5vmin;
 }
@@ -44,7 +90,7 @@ body {
     flex-wrap: wrap;
 }
 
-.game-grid > div {
+.game-grid>div {
     border: 1px solid lightgrey;
     display: inline-block;
 }
@@ -61,7 +107,11 @@ body {
 }
 
 /* in-game elements */
-.player, .swat, .invader, .invader-goo, .explosion {
+.player,
+.swat,
+.invader,
+.invader-goo,
+.dead-fly {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -71,9 +121,6 @@ body {
     background-image: url('../assets/Hand.png');
 }
 
-.swat {
-    background-image: url('../assets/Fly-swat.png');
-}
 
 .black {
     background-image: url('../assets/Black-1.png');
@@ -93,4 +140,12 @@ body {
 
 .gold {
     background-image: url('../assets/Gold-1.png');
+}
+
+.dead-fly {
+    background-image: url('../assets/Dead-fly-2.png');
+}
+
+.swat {
+    background-image: url('../assets/Fly-swat.png');
 }
