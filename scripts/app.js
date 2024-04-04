@@ -142,32 +142,8 @@ function soundOff() {
 }
 
 function resetGame() {
-    //set start position for invaders
-    //added different invader types for each row
-    invadersCurrPos.forEach(colArr => {
-        if (invadersCurrPos.indexOf(colArr) === 4) {
-            colArr.forEach(blkValue => {
-                blks[blkValue].classList.add('invader', 'black')
-            })
-        } else if (invadersCurrPos.indexOf(colArr) === 3) {
-            colArr.forEach(blkValue => {
-                blks[blkValue].classList.add('invader', 'brown')
-            })
-        } else if (invadersCurrPos.indexOf(colArr) === 2) {
-            colArr.forEach(blkValue => {
-                blks[blkValue].classList.add('invader', 'green')
-            })
-        } else if (invadersCurrPos.indexOf(colArr) === 1) {
-            colArr.forEach(blkValue => {
-                blks[blkValue].classList.add('invader', 'purple')
-            })
-        } else if (invadersCurrPos.indexOf(colArr) === 0) {
-            colArr.forEach(blkValue => {
-                blks[blkValue].classList.add('invader', 'gold')
-            })
-        }
-        // console.log(blks[blkValue])
-    })
+    
+    setInvaders()
 
     //reset score and lives to game start
     score = 0
@@ -199,7 +175,7 @@ function playerShoot(evt) {
         console.log('start interval')
         let interval = setInterval(() => {
             blks[shootOrigin]?.classList.remove('swat')
-            if (shootOrigin > playerCurrPos - 289) {
+            if (shootOrigin > cols - 1) {
                 shootOrigin -= cols
                 blks[shootOrigin].classList.add('swat')
                 // console.log(blks[shootOrigin])
@@ -268,9 +244,9 @@ function invadersMove() {
     //     colArr.forEach(blkValue => {
     //         blks[blkValue].classList.remove('black', 'brown', 'green', 'purple', 'gold')
 
-    //         // console.log(blkValue)
     //         console.log(blkValue)
-    //         // until blkValue = end numbers
+    //         console.log(blkValue)
+    //         until blkValue = end numbers
     //     })
     // })
 
@@ -281,29 +257,6 @@ function invadersMove() {
             invadersCurrPos[index][idx] += sideMove
             // console.log(invadersCurrPos[index][idx])
         })
-        // console.log(colArr[0])
-        // if (invadersCurrPos.indexOf(colArr) === 4) {
-        //     colArr.forEach(blkValue => {
-        //         blks[blkValue].classList.add('invader', 'black')
-        //     })
-        // } else if (invadersCurrPos.indexOf(colArr) === 3) {
-        //     colArr.forEach(blkValue => {
-        //         blks[blkValue].classList.add('invader', 'brown')
-        //     })
-        // } else if (invadersCurrPos.indexOf(colArr) === 2) {
-        //     colArr.forEach(blkValue => {
-        //         blks[blkValue].classList.add('invader', 'green')
-        //     })
-        // } else if (invadersCurrPos.indexOf(colArr) === 1) {
-        //     colArr.forEach(blkValue => {
-        //         blks[blkValue].classList.add('invader', 'purple')
-        //     })
-        // } else if (invadersCurrPos.indexOf(colArr) === 0) {
-        //     colArr.forEach(blkValue => {
-        //         blks[blkValue].classList.add('invader', 'gold')
-        //     })
-        // }
-        // console.log(blks[blkValue])
     })
 
     // console.log(invadersCurrPos)
@@ -313,6 +266,8 @@ function invadersMove() {
 }
 
 function setInvaders() {
+    //set start position for invaders
+    //added different invader types for each row
     invadersCurrPos.forEach(colArr => {
         if (invadersCurrPos.indexOf(colArr) === 4) {
             colArr.forEach(blkValue => {
