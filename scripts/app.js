@@ -279,12 +279,61 @@ function invadersMove() {
             //console.log(invadersCurrPos[index][idx]) //getting numbers 
             blks[blkValue].classList.remove('black', 'brown', 'green', 'purple', 'gold')
             invadersCurrPos[index][idx] += sideMove
-            console.log(invadersCurrPos[index][idx])
-            if (index === 0) {
-                
-            }
+            // console.log(invadersCurrPos[index][idx])
         })
+        // console.log(colArr[0])
+        // if (invadersCurrPos.indexOf(colArr) === 4) {
+        //     colArr.forEach(blkValue => {
+        //         blks[blkValue].classList.add('invader', 'black')
+        //     })
+        // } else if (invadersCurrPos.indexOf(colArr) === 3) {
+        //     colArr.forEach(blkValue => {
+        //         blks[blkValue].classList.add('invader', 'brown')
+        //     })
+        // } else if (invadersCurrPos.indexOf(colArr) === 2) {
+        //     colArr.forEach(blkValue => {
+        //         blks[blkValue].classList.add('invader', 'green')
+        //     })
+        // } else if (invadersCurrPos.indexOf(colArr) === 1) {
+        //     colArr.forEach(blkValue => {
+        //         blks[blkValue].classList.add('invader', 'purple')
+        //     })
+        // } else if (invadersCurrPos.indexOf(colArr) === 0) {
+        //     colArr.forEach(blkValue => {
+        //         blks[blkValue].classList.add('invader', 'gold')
+        //     })
+        // }
+        // console.log(blks[blkValue])
     })
 
+    // console.log(invadersCurrPos)
+    setInvaders()
 
+
+}
+
+function setInvaders() {
+    invadersCurrPos.forEach(colArr => {
+        if (invadersCurrPos.indexOf(colArr) === 4) {
+            colArr.forEach(blkValue => {
+                blks[blkValue].classList.add('invader', 'black')
+            })
+        } else if (invadersCurrPos.indexOf(colArr) === 3) {
+            colArr.forEach(blkValue => {
+                blks[blkValue].classList.add('invader', 'brown')
+            })
+        } else if (invadersCurrPos.indexOf(colArr) === 2) {
+            colArr.forEach(blkValue => {
+                blks[blkValue].classList.add('invader', 'green')
+            })
+        } else if (invadersCurrPos.indexOf(colArr) === 1) {
+            colArr.forEach(blkValue => {
+                blks[blkValue].classList.add('invader', 'purple')
+            })
+        } else if (invadersCurrPos.indexOf(colArr) === 0) {
+            colArr.forEach(blkValue => {
+                blks[blkValue].classList.add('invader', 'gold')
+            })
+        }
+    })
 }
