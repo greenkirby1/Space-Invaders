@@ -26,14 +26,14 @@ const blks = []
 function makeGrid() {
     for (let i = 0; i < blkCount; i++) {
         const blk = document.createElement('div')
-        blk.innerText = i 
+        blk.innerText = i
         blk.style.width = `${100 / cols}%`
         blk.style.height = `${100 / rows}%`
         blks.push(blk)
         blks.forEach((blk) => {
             const blkId = `${blks.indexOf(blk)}`
             return blk.dataset.id = blkId
-        })    
+        })
         grid.append(blk)
         // console.log(blks)
         if (i === startPos) {
@@ -48,9 +48,9 @@ makeGrid()
 // ? State changing variables
 let lives
 let score
-let playerCurrPos = blks.indexOf(document.querySelector('.player'))
-let classNames 
-let invadersStartPos = [
+let playerCurrPos = blks.indexOf(document.querySelector('.player')) //if this comes before makeGrid() player class doesn't exist yet
+let classNames
+let invadersCurrPos = [
     [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
     [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
     [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47],
@@ -59,7 +59,6 @@ let invadersStartPos = [
 ]
 
 // - invaders state
-//   ~ forEach to add classes to invaders
 //   - movement side to side at setInterval()
 //   - after reaching one side of grid invaders move down one row as a whole
 //   - position reset to start position when player clicks play again btn
@@ -93,11 +92,11 @@ let invadersStartPos = [
 //   ~ for (invaders row change === true) {
 //          ~ interval++
 //   ~ }
-    
+
 // ~ leaderboard
 //   ~ leaderboard using localStorage
-    
-    
+
+
 // ? Cached elements
 // - start game button
 //   - const startBtn = document.getElementById('start')
@@ -124,43 +123,50 @@ document.addEventListener('keyup', playerShoot)
 
 
 // ? Functions
-init()
 
 
 function init() {
-    makeGrid()
+    // makeGrid()
     // delay for 2000ms then start game
     resetGame()
+    // invadersMove()
+
 }
 
 function pause() {
-    
+
 }
 
 function soundOff() {
-    
+
 }
 
 function resetGame() {
     //set start position for invaders
-    invadersStartPos.forEach(colArr => {
-        if (invadersStartPos.indexOf(colArr) === 4) {
+    //added different invader types for each row
+    invadersCurrPos.forEach(colArr => {
+        if (invadersCurrPos.indexOf(colArr) === 4) {
             colArr.forEach(blkValue => {
                 blks[blkValue].classList.add('invader', 'black')
-        })} else if (invadersStartPos.indexOf(colArr) === 3) {
+            })
+        } else if (invadersCurrPos.indexOf(colArr) === 3) {
             colArr.forEach(blkValue => {
                 blks[blkValue].classList.add('invader', 'brown')
-        })} else if (invadersStartPos.indexOf(colArr) === 2) {
-        colArr.forEach(blkValue => {
-            blks[blkValue].classList.add('invader', 'green')
-        })} else if (invadersStartPos.indexOf(colArr) === 1) {
+            })
+        } else if (invadersCurrPos.indexOf(colArr) === 2) {
+            colArr.forEach(blkValue => {
+                blks[blkValue].classList.add('invader', 'green')
+            })
+        } else if (invadersCurrPos.indexOf(colArr) === 1) {
             colArr.forEach(blkValue => {
                 blks[blkValue].classList.add('invader', 'purple')
-        })} else if (invadersStartPos.indexOf(colArr) === 0) {
+            })
+        } else if (invadersCurrPos.indexOf(colArr) === 0) {
             colArr.forEach(blkValue => {
                 blks[blkValue].classList.add('invader', 'gold')
-        })}
-            // console.log(blks[blkValue])
+            })
+        }
+        // console.log(blks[blkValue])
     })
 
     //reset score and lives to game start
@@ -182,50 +188,103 @@ function playerMove(evt) {
     // console.log(playerCurrPos)
     blks[playerCurrPos].classList.add('player')
 }
-    
+
 function playerShoot(evt) {
     // console.log(evt.code)
     let shootOrigin = playerCurrPos - cols
-    classNames = ['invader', 'swat']
 
     // console.log(shootOrigin)
     if (evt.code === 'Space') {
         blks[shootOrigin].classList.add('swat')
+        console.log('start interval')
         let interval = setInterval(() => {
-            blks[shootOrigin]?.classList.remove('swat')  
+            blks[shootOrigin]?.classList.remove('swat')
             if (shootOrigin > playerCurrPos - 289) {
                 shootOrigin -= cols
                 blks[shootOrigin].classList.add('swat')
-                console.log(blks[shootOrigin])
-            } else if (shootOrigin === playerCurrPos - 289) {
+                // console.log(blks[shootOrigin])
+                console.log('did 1')
+                if (blks[shootOrigin].classList.contains('black')) {
+                    score += 100
+                    // scoreEl.innerHTML = score
+                    // blks[shootOrigin].classList.remove('invader swat')
+                    console.log(score)
+                    clearInterval(interval)
+                }
+            } else {
                 clearInterval(interval)
-            } else if (blks[shootOrigin].classList.cotains('invader' && 'swat')) {
-                score += 100
-                // scoreEl.innerHTML = score
-                // blks[shootOrigin].classList.remove('invader swat')
-                console.log(score)
+                console.log('did 2')
             }
-        }, 200)
+        }, 80)
     }
 
-//   - if (blks with .swat > 4) {
-//          - disable space bar key shooting laser
-//          - check whether blks with .invader laser > 4
-//          - enable laser space bar key if condition not met
-//     }
-//   - if (blks with .player-laser && .invader === true) {
-//          - element.classList.add('explosion')
-//          - element.classList.remove('invader-laser invader')
+    //   - if (blks with .swat > 4) {
+    //          - disable space bar key shooting laser
+    //          - check whether blks with .invader laser > 4
+    //          - enable laser space bar key if condition not met
+    //     }
+    //   - if (blks with .player-laser && .invader === true) {
+    //          - element.classList.add('explosion')
+    //          - element.classList.remove('invader-laser invader')
     //          - score(sum of total score) += 100
     //     }  
 }
 
 // function invaderKill() {
-//     blks.forEach(blk => {
-//         if (blks[blk].classList.contains('invader swat')) {
-//             score += 100
-//             scoreEl.innerHTML = score
-//             blks[blk].classList.remove('invader')
-//         }
-//     })
+//     blks.forEach(blk => blk.classList.contains('black') && blks[blk].classList.contains('swat')? score += 10: console.log('missed'))
+//         // console.log(blk)
+
+// score += 100
+// console.log(score)
+// scoreEl.innerHTML = score
+// blks[blk].classList.remove('invader')
+
+//     }})
 // }
+
+function invadersMove() {
+    let sideMove = 1
+    let downMove = cols
+    // let interval = setInterval(() => {
+    // do {
+    //   invadersCurrPos.forEach(colArr => {
+    //     colArr.forEach(blkValue => {
+    //         blkValue += sideMove
+    //     })
+    //   })  
+    // } while (blkValue < 16)
+
+    // invadersCurrPos.forEach(colArr, colIdx => {
+    //     colArr.forEach(blkValue => {
+    //         if (blkValue < 16) {
+
+    //             blkValue += 1
+    //             console.log(blkValue)
+    //         }
+    //     })
+    // })
+
+    // invadersCurrPos.forEach(colArr => {
+    //     colArr.forEach(blkValue => {
+    //         blks[blkValue].classList.remove('black', 'brown', 'green', 'purple', 'gold')
+
+    //         // console.log(blkValue)
+    //         console.log(blkValue)
+    //         // until blkValue = end numbers
+    //     })
+    // })
+
+    invadersCurrPos.forEach((colArr, index) => {
+        colArr.forEach((blkValue, idx) => {
+            //console.log(invadersCurrPos[index][idx]) //getting numbers 
+            blks[blkValue].classList.remove('black', 'brown', 'green', 'purple', 'gold')
+            invadersCurrPos[index][idx] += sideMove
+            console.log(invadersCurrPos[index][idx])
+            if (index === 0) {
+                
+            }
+        })
+    })
+
+
+}
