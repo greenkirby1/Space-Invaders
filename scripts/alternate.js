@@ -51,6 +51,8 @@ function makeGrid() {
 let lives
 let score
 let playerCurrPos = 297
+let invaderRow
+let invaderCol
 
 
 // ? Cached elements
@@ -127,102 +129,56 @@ function playerMove(evt) {
     blks[playerCurrPos].classList.add('player')
 }
 
-function playerShoot(evt) {
-    // console.log(evt.code)
-    let shootOrigin = playerCurrPos - cols
-
-    // console.log(shootOrigin)
-    if (evt.code === 'Space') {
-        blks[shootOrigin].classList.add('swat')
-        console.log('start interval')
-        let interval = setInterval(() => {
-            blks[shootOrigin]?.classList.remove('swat')
-            if (shootOrigin > cols - 1) {
-                shootOrigin -= cols
-                blks[shootOrigin].classList.add('swat')
-                // console.log(blks[shootOrigin])
-                console.log('did 1')
-                if (blks[shootOrigin].classList.contains('black')) {
-                    score += 100
-                    scoreEl.innerHTML = score
-                    blks[shootOrigin].classList.remove('black', 'swat')
-                    // console.log(score)
-                    clearInterval(interval)
-                    blks[shootOrigin].classList.add('dead-fly')
-                } else if (blks[shootOrigin].classList.contains('brown')) {
-                    score += 200
-                    scoreEl.innerHTML = score
-                    blks[shootOrigin].classList.remove('brown', 'swat')
-                    clearInterval(interval)
-                    blks[shootOrigin].classList.add('dead-fly')
-                    
-                } else if (blks[shootOrigin].classList.contains('green')) {
-                    score += 300
-                    scoreEl.innerHTML = score
-                    blks[shootOrigin].classList.remove('green', 'swat')
-                    clearInterval(interval)
-                    blks[shootOrigin].classList.add('dead-fly')
-                    
-                } else if (blks[shootOrigin].classList.contains('purple')) {
-                    score += 500
-                    scoreEl.innerHTML = score
-                    blks[shootOrigin].classList.remove('purple', 'swat')
-                    clearInterval(interval)
-                    blks[shootOrigin].classList.add('dead-fly')
-                    
-                } else if (blks[shootOrigin].classList.contains('gold')) {
-                    score += 1000
-                    scoreEl.innerHTML = score
-                    blks[shootOrigin].classList.remove('gold', 'swat')
-                    clearInterval(interval)
-                    blks[shootOrigin].classList.add('dead-fly')
-                }
-                
-                setTimeout(() => {
-                    blks[shootOrigin].classList.remove('dead-fly')
-                }, 70)    
-            } else {
-                clearInterval(interval)
-                console.log('did 2')
-            }
-        }, 90)
-    }
-
-    //   - if (blks with .swat > 4) {
-    //          - disable space bar key shooting laser
-    //          - check whether blks with .invader laser > 4
-    //          - enable laser space bar key if condition not met
-    //     }
-}
-
 function invadersMove() {
     let sideMove = 1
     let downMove = cols
 
     let interval = setInterval(() => {
-        invadersCurrPos.forEach((colArr, index) => {
-        colArr.forEach((blkValue, idx) => {
-            //console.log(invadersCurrPos[index][idx]) //getting numbers 
-            blks[blkValue].classList.remove('black', 'brown', 'green', 'purple', 'gold')
-            if (invadersCurrPos[index][idx] % cols < cols - 1) {
-                // console.log(invadersCurrPos[index][idx] % cols)
-                invadersCurrPos[index][idx] += sideMove
-                console.log(blks[invadersCurrPos[4][idx]])
-            // } else if (invadersCurrPos[4][idx] % cols === cols - 1) {
-            //     invadersCurrPos[index][idx] += downMove
-            //     console.log(invadersCurrPos[index][idx] += downMove)
-            } else {
-                clearInterval(interval)
-                console.log("you've reached the end")
-            }
-            setInvaders()
-            // console.log(invadersCurrPos[index][idx])
+        // returns true when remainder is 16 (stop point)
+        let noMoveRight = invadersCurrPos.some(rowArr => {
+            return rowArr.some(invaderIdx => {
+                return invaderIdx % cols === cols - 1
             })
         })
-    }, 1000)
 
-    // console.log(invadersCurrPos)
-    // setInvaders()
+        // returns true when remainder is 0 (stop point)
+        let noMoveLeft = invadersCurrPos.some(rowArr => {
+            return rowArr.some(invaderIdx => {
+                return invaderIdx % cols === 0
+            })
+        })
+
+        //remove classes from existing position
+        invadersCurrPos.forEach(rowArr => {
+            rowArr.forEach(blkValue => {
+                blks[blkValue].classList.remove(...invaderColors)
+            })
+        })
+
+        //update all invadersCurrPos e.g. ++/-- need index
+        invadersCurrPos.forEach((rowArr, index) => {
+            rowArr.forEach((blkValue, idx) => {
+                if (noMoveRight === true) {
+                    sideMove = -1
+                    invadersCurrPos[index][idx] += downMove
+                    // invadersCurrPos[index][idx] += sideMove
+                } else if (noMoveLeft === true) {
+                    sideMove = 1
+                    invadersCurrPos[index][idx] += downMove
+                }
+                invadersCurrPos[index][idx] += sideMove
+                console.log(invadersCurrPos[index], invadersCurrPos[idx])
+            })
+        }) 
+
+        //check for 
+
+
+        // add classes back in
+        setInvaders()
+    }, 900)
+
+    //clearInterval when row above player reached and also loose all lives
 }
 
 function setInvaders() {
