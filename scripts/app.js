@@ -13,16 +13,6 @@
 
 
 // ? Constant variables
-// const invaders = {
-//     gold: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-//     purple: [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-//     green: [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47],
-//     brown: [54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64],
-//     black: [71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81]
-// }
-// console.log(Object.keys(invaders))
-
-
 const grid = document.querySelector('.game-grid')
 const startPos = 297
 
@@ -67,12 +57,6 @@ let invadersCurrPos = [
     [71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81]
 ]
 
-
-// - invaders state
-//   - movement side to side at setInterval()
-//   - after reaching one side of grid invaders move down one row as a whole
-//   - position reset to start position when player clicks play again btn
-
 // - player state
 //   - laser created when space bar is pressed
 //   - if (lives === 0 || invaders are in the same row as player) {
@@ -93,10 +77,6 @@ let invadersCurrPos = [
 //          - resume interval of invaders moving
 //          - element.classList.add('player')  // to resume game 
 //     }
-
-// - laser from player
-//   - laser travels up the column from blk where it was generated/initiated
-
 
 // ~ setInterval time decrement
 //   ~ for (invaders row change === true) {
@@ -126,9 +106,9 @@ const invaderColors = ['black', 'brown', 'green', 'purple', 'gold']
 
 
 // ? Event listners
+startBtn.addEventListener('click', init)
 document.addEventListener('keydown', playerMove)
 document.addEventListener('keyup', playerShoot)
-startBtn.addEventListener('click', init)
 // pauseBtn.addEventListener('click', pause)
 // playAgainBtn.addEventListener('click', init)
 // ~ muteBtn.addEventListener('click', soundOff)
@@ -176,18 +156,25 @@ function invadersShoot() {
 }
 
 function invadersMove() {
-    invadersMoveRight()
+    invadersSideMove()
 }
 
-function invadersMoveRight() {
+function invadersSideMove() {
     let sideMove = 1
     let downMove = cols
 
     let interval = setInterval(() => {
-        // returns true when remainder is 16
-        let canMove = invadersCurrPos.some(rowArr => {
+        // returns true when remainder is 16 (stop point)
+        let noMoveRight = invadersCurrPos.some(rowArr => {
             return rowArr.some(invaderIdx => {
                 return invaderIdx % cols === cols - 1
+            })
+        })
+
+        // returns true when remainder is 0 (stop point)
+        let noMoveLeft = invadersCurrPos.some(rowArr => {
+            return rowArr.some(invaderIdx => {
+                return invaderIdx % cols === 0
             })
         })
 
@@ -201,23 +188,29 @@ function invadersMoveRight() {
         //update all invadersCurrPos e.g. ++/-- need index
         invadersCurrPos.forEach((rowArr, index) => {
             rowArr.forEach((blkValue, idx) => {
-                if (canMove !== true) {
-                    invadersCurrPos[index][idx] += sideMove
+                if (noMoveLeft === true) {
+                    sideMove = 1
+                    invadersCurrPos[index][idx] += downMove
+                    // invadersCurrPos[index][idx] += sideMove
+                } else if (noMoveRight === true) {
+                    sideMove = -1
+                    invadersCurrPos[index][idx] += downMove  
                 }
+                invadersCurrPos[index][idx] += sideMove
+
+                
+
+                // } else if (noMoveLeft !== true) {
+                    
+                //     clearInterval(interval)
+                    
+            })
                 // console.log(invadersCurrPos[index][idx])
-            })  
         }) 
 
         // add classes back in
         setInvaders()
-
-    }, 1000)
-}
-
-function invadersMoveLeft() {
-    let downMove = cols
-
-
+    }, 900)
 }
 
 
@@ -319,42 +312,3 @@ function playerShoot(evt) {
         }, 100)
     }
 }
-
-
-
-
-
-
-// function invadersMove() {
-//     const invaders = document.querySelectorAll('.invader')
-//     let sideMove = 1
-//     let downMove = cols
-
-//     let interval = setInterval(() => {
-//         invadersCurrPos.forEach((colArr, index) => {
-//         colArr.forEach((blkValue, idx) => {
-//             let blocks = blks[blkValue]
-//             blocks.classList.remove(...invaderColors)
-//             if (invadersCurrPos[index][idx] % cols < cols - 1) {
-//                 // console.log(invadersCurrPos[index][idx] % cols)
-//                 invadersCurrPos[index][idx] += sideMove
-//                 console.log(invadersCurrPos[index][idx])
-//             // } else if (invadersCurrPos[4][idx] % cols === cols - 1) {
-//             //     invadersCurrPos[index][idx] += downMove
-//             //     console.log(invadersCurrPos[index][idx])
-//             } else {
-//                 clearInterval(interval)
-//                 console.log("you've reached the end")
-//             }
-//             // for (let i = invadersCurrPos[index][idx] % cols; i < cols - 1; i += sideMove) {
-//             //     console.log(blks[i])
-//             // }
-//             setInvaders()
-//             // console.log(invadersCurrPos[index][idx])
-//             })
-//         })
-//     }, 1000)
-
-//     // console.log(invadersCurrPos)
-//     // setInvaders()
-// }
