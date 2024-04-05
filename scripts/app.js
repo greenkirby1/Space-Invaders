@@ -112,7 +112,7 @@ const startBtn = document.getElementById('start')
 // - pause/resume button
 //   - const pauseBtn = document.getElementById('pause')
 // - play again button
-//   - const playAgainBtn = document.getElementById('play-again')
+// const playAgainBtn = document.getElementById('play-again')
 // ~ mute button
 //   ~ mute audio when audio is playing
 //   ~ when audio is muted it can be unmuted
@@ -144,9 +144,13 @@ function init(evt) {
         startScreen.style.display = 'none'
     }
     makeGrid()
-    // delay for 2000ms then start game
     resetGame()
-    // invadersMove()
+    // delay for 2000ms then start game
+    setTimeout(() => {
+        invadersMove()
+        invadersShoot()
+    }, 100)
+
 
 }
 
@@ -167,62 +171,78 @@ function resetGame() {
     livesEl.innerHTML = '❤️'.repeat(lives)
 }
 
+function invadersShoot() {
+
+}
+
 function invadersMove() {
-    const invaders = document.querySelectorAll('.invader')
+    invadersMoveRight()
+}
+
+function invadersMoveRight() {
     let sideMove = 1
     let downMove = cols
 
     let interval = setInterval(() => {
-        invadersCurrPos.forEach((colArr, index) => {
-        colArr.forEach((blkValue, idx) => {
-            let blocks = blks[blkValue]
-            blocks.classList.remove(...invaderColors)
-            // if (blks.some(invadersCurrPos[index][idx] % cols) < cols - 1) {
-            //     // console.log(invadersCurrPos[index][idx] % cols)
-            //     invadersCurrPos[index][idx] += sideMove
-            //     console.log(blks.indexOf(invaders))
-            // // } else if (invadersCurrPos[4][idx] % cols === cols - 1) {
-            // //     invadersCurrPos[index][idx] += downMove
-            // //     console.log(invadersCurrPos[index][idx])
-            // } else {
-            //     clearInterval(interval)
-            //     console.log("you've reached the end")
-            // }
-            for (let i = invadersCurrPos[index][idx] % cols; i < cols - 1; i += sideMove) {
-                console.log(blks[i])
-            }
-            setInvaders()
-            // console.log(invadersCurrPos[index][idx])
+        // returns true when remainder is 16
+        let canMove = invadersCurrPos.some(rowArr => {
+            return rowArr.some(invaderIdx => {
+                return invaderIdx % cols === cols - 1
             })
         })
-    }, 1000)
 
-    // console.log(invadersCurrPos)
-    // setInvaders()
+        //remove classes from existing position
+        invadersCurrPos.forEach(rowArr => {
+            rowArr.forEach(blkValue => {
+                blks[blkValue].classList.remove(...invaderColors)
+            })
+        })
+
+        //update all invadersCurrPos e.g. ++/-- need index
+        invadersCurrPos.forEach((rowArr, index) => {
+            rowArr.forEach((blkValue, idx) => {
+                if (canMove !== true) {
+                    invadersCurrPos[index][idx] += sideMove
+                }
+                // console.log(invadersCurrPos[index][idx])
+            })  
+        }) 
+
+        // add classes back in
+        setInvaders()
+
+    }, 1000)
 }
+
+function invadersMoveLeft() {
+    let downMove = cols
+
+
+}
+
 
 function setInvaders() {
     //set start position for invaders
     //added different invader types for each row
-    invadersCurrPos.forEach(colArr => {
-        if (invadersCurrPos.indexOf(colArr) === 4) {
-            colArr.forEach(blkValue => {
+    invadersCurrPos.forEach(rowArr => {
+        if (invadersCurrPos.indexOf(rowArr) === 4) {
+            rowArr.forEach(blkValue => {
                 blks[blkValue].classList.add('invader', 'black')
             })
-        } else if (invadersCurrPos.indexOf(colArr) === 3) {
-            colArr.forEach(blkValue => {
+        } else if (invadersCurrPos.indexOf(rowArr) === 3) {
+            rowArr.forEach(blkValue => {
                 blks[blkValue].classList.add('invader', 'brown')
             })
-        } else if (invadersCurrPos.indexOf(colArr) === 2) {
-            colArr.forEach(blkValue => {
+        } else if (invadersCurrPos.indexOf(rowArr) === 2) {
+            rowArr.forEach(blkValue => {
                 blks[blkValue].classList.add('invader', 'green')
             })
-        } else if (invadersCurrPos.indexOf(colArr) === 1) {
-            colArr.forEach(blkValue => {
+        } else if (invadersCurrPos.indexOf(rowArr) === 1) {
+            rowArr.forEach(blkValue => {
                 blks[blkValue].classList.add('invader', 'purple')
             })
-        } else if (invadersCurrPos.indexOf(colArr) === 0) {
-            colArr.forEach(blkValue => {
+        } else if (invadersCurrPos.indexOf(rowArr) === 0) {
+            rowArr.forEach(blkValue => {
                 blks[blkValue].classList.add('invader', 'gold')
             })
         }
@@ -299,3 +319,42 @@ function playerShoot(evt) {
         }, 100)
     }
 }
+
+
+
+
+
+
+// function invadersMove() {
+//     const invaders = document.querySelectorAll('.invader')
+//     let sideMove = 1
+//     let downMove = cols
+
+//     let interval = setInterval(() => {
+//         invadersCurrPos.forEach((colArr, index) => {
+//         colArr.forEach((blkValue, idx) => {
+//             let blocks = blks[blkValue]
+//             blocks.classList.remove(...invaderColors)
+//             if (invadersCurrPos[index][idx] % cols < cols - 1) {
+//                 // console.log(invadersCurrPos[index][idx] % cols)
+//                 invadersCurrPos[index][idx] += sideMove
+//                 console.log(invadersCurrPos[index][idx])
+//             // } else if (invadersCurrPos[4][idx] % cols === cols - 1) {
+//             //     invadersCurrPos[index][idx] += downMove
+//             //     console.log(invadersCurrPos[index][idx])
+//             } else {
+//                 clearInterval(interval)
+//                 console.log("you've reached the end")
+//             }
+//             // for (let i = invadersCurrPos[index][idx] % cols; i < cols - 1; i += sideMove) {
+//             //     console.log(blks[i])
+//             // }
+//             setInvaders()
+//             // console.log(invadersCurrPos[index][idx])
+//             })
+//         })
+//     }, 1000)
+
+//     // console.log(invadersCurrPos)
+//     // setInvaders()
+// }
