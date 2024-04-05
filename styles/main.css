@@ -9,11 +9,19 @@ body {
 }
 
 .start-container {
-    display: none;
-    /* display: flex; */
+    /* display: none; */
+    display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.start-scene {
     height: 100vmin;
+    flex-grow: 2;
+    background-image: url('../assets/Fly-general.PNG');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .start-wrapper {
@@ -21,6 +29,12 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    flex-grow: 1;
+}
+
+.leaderboard {
+    flex-grow: 2;
+    height: 100vmin;
 }
 
 h1 {
@@ -56,10 +70,12 @@ li {
     border-radius: 10px;
 }
 
+
+
 .game-container {
     /* visibility: hidden; */
-    display: flex;
-    /* display: none; */
+    /* display: flex; */
+    display: none;
     flex-direction: column;
     align-items: center;
 }

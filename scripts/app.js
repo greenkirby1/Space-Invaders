@@ -13,6 +13,16 @@
 
 
 // ? Constant variables
+// const invaders = {
+//     gold: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+//     purple: [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+//     green: [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47],
+//     brown: [54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64],
+//     black: [71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81]
+// }
+// console.log(Object.keys(invaders))
+
+
 const grid = document.querySelector('.game-grid')
 const startPos = 297
 
@@ -26,7 +36,7 @@ const blks = []
 function makeGrid() {
     for (let i = 0; i < blkCount; i++) {
         const blk = document.createElement('div')
-        // blk.innerText = i
+        blk.innerText = i
         blk.style.width = `${100 / cols}%`
         blk.style.height = `${100 / rows}%`
         blks.push(blk)
@@ -56,6 +66,7 @@ let invadersCurrPos = [
     [54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64],
     [71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81]
 ]
+
 
 // - invaders state
 //   - movement side to side at setInterval()
@@ -97,7 +108,6 @@ let invadersCurrPos = [
 
 
 // ? Cached elements
-// - start game button
 const startBtn = document.getElementById('start')
 // - pause/resume button
 //   - const pauseBtn = document.getElementById('pause')
@@ -111,6 +121,8 @@ const scoreEl = document.getElementById('score')
 const livesEl = document.getElementById('lives-display')
 const startScreen = document.querySelector('.start-container')
 const gameStartScreen = document.querySelector('.game-container')
+const invaderColors = ['black', 'brown', 'green', 'purple', 'gold']
+
 
 
 // ? Event listners
@@ -124,14 +136,13 @@ startBtn.addEventListener('click', init)
 
 
 // ? Functions
-init()
+// init()
 
-function init() {
-    // console.log(evt.target, 'start clicked')
-    // if (gameStartScreen.style.display === 'none') {
-    //     startScreen.style.display = 'none'
-    //     gameStartScreen.style.display = 'flex'
-    // }
+function init(evt) {
+    if (gameStartScreen.style.display === '') {
+        gameStartScreen.style.display = 'flex'
+        startScreen.style.display = 'none'
+    }
     makeGrid()
     // delay for 2000ms then start game
     resetGame()
@@ -148,9 +159,7 @@ function soundOff() {
 }
 
 function resetGame() {
-    
     setInvaders()
-
     //reset score and lives to game start
     score = 0
     scoreEl.innerHTML = score
@@ -158,123 +167,29 @@ function resetGame() {
     livesEl.innerHTML = '❤️'.repeat(lives)
 }
 
-function playerMove(evt) {
-    blks[playerCurrPos].classList.remove('player')
-    if (evt.code === 'ArrowLeft' && playerCurrPos !== 289) {
-        playerCurrPos--
-    } else if (evt.code === 'ArrowRight' && playerCurrPos !== 305) {
-        playerCurrPos++
-    } else {
-        console.log("Not Allowed")
-    }
-    // console.log(playerCurrPos)
-    blks[playerCurrPos].classList.add('player')
-}
-
-function playerShoot(evt) {
-    // console.log(evt.code)
-    let shootOrigin = playerCurrPos - cols
-
-    // console.log(shootOrigin)
-    if (evt.code === 'Space') {
-        blks[shootOrigin].classList.add('swat')
-        console.log('start interval')
-        let interval = setInterval(() => {
-            blks[shootOrigin]?.classList.remove('swat')
-            if (shootOrigin > cols - 1) {
-                shootOrigin -= cols
-                blks[shootOrigin].classList.add('swat')
-                // console.log(blks[shootOrigin])
-                console.log('did 1')
-                if (blks[shootOrigin].classList.contains('black')) {
-                    score += 100
-                    scoreEl.innerHTML = score
-                    blks[shootOrigin].classList.remove('black', 'swat')
-                    // console.log(score)
-                    clearInterval(interval)
-                    blks[shootOrigin].classList.add('dead-fly')
-                } else if (blks[shootOrigin].classList.contains('brown')) {
-                    score += 200
-                    scoreEl.innerHTML = score
-                    blks[shootOrigin].classList.remove('brown', 'swat')
-                    clearInterval(interval)
-                    blks[shootOrigin].classList.add('dead-fly')
-                    
-                } else if (blks[shootOrigin].classList.contains('green')) {
-                    score += 300
-                    scoreEl.innerHTML = score
-                    blks[shootOrigin].classList.remove('green', 'swat')
-                    clearInterval(interval)
-                    blks[shootOrigin].classList.add('dead-fly')
-                    
-                } else if (blks[shootOrigin].classList.contains('purple')) {
-                    score += 500
-                    scoreEl.innerHTML = score
-                    blks[shootOrigin].classList.remove('purple', 'swat')
-                    clearInterval(interval)
-                    blks[shootOrigin].classList.add('dead-fly')
-                    
-                } else if (blks[shootOrigin].classList.contains('gold')) {
-                    score += 1000
-                    scoreEl.innerHTML = score
-                    blks[shootOrigin].classList.remove('gold', 'swat')
-                    clearInterval(interval)
-                    blks[shootOrigin].classList.add('dead-fly')
-                }
-                
-                setTimeout(() => {
-                    blks[shootOrigin].classList.remove('dead-fly')
-                }, 70)    
-            } else {
-                clearInterval(interval)
-                console.log('did 2')
-            }
-        }, 90)
-    }
-
-    //   - if (blks with .swat > 4) {
-    //          - disable space bar key shooting laser
-    //          - check whether blks with .invader laser > 4
-    //          - enable laser space bar key if condition not met
-    //     }
-    //   - if (blks with .player-laser && .invader === true) {
-    //          - element.classList.add('explosion')
-    //          - element.classList.remove('invader-laser invader')
-    //          - score(sum of total score) += 100
-    //     }  
-}
-
-// function invaderKill() {
-//     blks.forEach(blk => blk.classList.contains('black') && blks[blk].classList.contains('swat')? score += 10: console.log('missed'))
-//         // console.log(blk)
-
-// score += 100
-// console.log(score)
-// scoreEl.innerHTML = score
-// blks[blk].classList.remove('invader')
-
-//     }})
-// }
-
 function invadersMove() {
+    const invaders = document.querySelectorAll('.invader')
     let sideMove = 1
     let downMove = cols
 
     let interval = setInterval(() => {
         invadersCurrPos.forEach((colArr, index) => {
         colArr.forEach((blkValue, idx) => {
-            //console.log(invadersCurrPos[index][idx]) //getting numbers 
-            blks[blkValue].classList.remove('black', 'brown', 'green', 'purple', 'gold')
-            if (invadersCurrPos[index][idx] % cols < cols - 1) {
-                // console.log(invadersCurrPos[index][idx] % cols)
-                invadersCurrPos[index][idx] += sideMove
-                // console.log(blks[invadersCurrPos[index][idx] + cols])
-            } else if (invadersCurrPos[4][idx] % cols === cols - 1) {
-                invadersCurrPos[index][idx] += downMove
-                console.log(invadersCurrPos[index][idx] += downMove)
-            } else {
-                clearInterval(interval)
-                console.log("you've reached the end")
+            let blocks = blks[blkValue]
+            blocks.classList.remove(...invaderColors)
+            // if (blks.some(invadersCurrPos[index][idx] % cols) < cols - 1) {
+            //     // console.log(invadersCurrPos[index][idx] % cols)
+            //     invadersCurrPos[index][idx] += sideMove
+            //     console.log(blks.indexOf(invaders))
+            // // } else if (invadersCurrPos[4][idx] % cols === cols - 1) {
+            // //     invadersCurrPos[index][idx] += downMove
+            // //     console.log(invadersCurrPos[index][idx])
+            // } else {
+            //     clearInterval(interval)
+            //     console.log("you've reached the end")
+            // }
+            for (let i = invadersCurrPos[index][idx] % cols; i < cols - 1; i += sideMove) {
+                console.log(blks[i])
             }
             setInvaders()
             // console.log(invadersCurrPos[index][idx])
@@ -312,4 +227,75 @@ function setInvaders() {
             })
         }
     })
+}
+
+function playerMove(evt) {
+    blks[playerCurrPos].classList.remove('player')
+    if (evt.code === 'ArrowLeft' && playerCurrPos !== 289) {
+        playerCurrPos--
+    } else if (evt.code === 'ArrowRight' && playerCurrPos !== 305) {
+        playerCurrPos++
+    }
+    // console.log(playerCurrPos)
+    blks[playerCurrPos].classList.add('player')
+}
+
+function playerShoot(evt) {
+    // console.log(evt.code)
+    let shootOrigin = playerCurrPos - cols
+
+    // console.log(shootOrigin)
+    if (evt.code === 'Space') {
+        blks[shootOrigin].classList.add('swat')
+        let interval = setInterval(() => {
+            blks[shootOrigin]?.classList.remove('swat')
+            // const swatNum = document.querySelectorAll('.swat')
+            if (shootOrigin > cols - 1) {
+                shootOrigin -= cols
+                blks[shootOrigin].classList.add('swat')
+                if (blks[shootOrigin].classList.contains('black')) {
+                    score += 100
+                    scoreEl.innerHTML = score
+                    blks[shootOrigin].classList.remove('black', 'swat')
+                    clearInterval(interval)
+                    blks[shootOrigin].classList.add('dead-fly')
+                } else if (blks[shootOrigin].classList.contains('brown')) {
+                    score += 200
+                    scoreEl.innerHTML = score
+                    blks[shootOrigin].classList.remove('brown', 'swat')
+                    clearInterval(interval)
+                    blks[shootOrigin].classList.add('dead-fly')
+                    
+                } else if (blks[shootOrigin].classList.contains('green')) {
+                    score += 300
+                    scoreEl.innerHTML = score
+                    blks[shootOrigin].classList.remove('green', 'swat')
+                    clearInterval(interval)
+                    blks[shootOrigin].classList.add('dead-fly')
+                    
+                } else if (blks[shootOrigin].classList.contains('purple')) {
+                    score += 500
+                    scoreEl.innerHTML = score
+                    blks[shootOrigin].classList.remove('purple', 'swat')
+                    clearInterval(interval)
+                    blks[shootOrigin].classList.add('dead-fly')
+                    
+                } else if (blks[shootOrigin].classList.contains('gold')) {
+                    score += 1000
+                    scoreEl.innerHTML = score
+                    blks[shootOrigin].classList.remove('gold', 'swat')
+                    clearInterval(interval)
+                    blks[shootOrigin].classList.add('dead-fly')
+                }
+                
+                setTimeout(() => {
+                    blks[shootOrigin].classList.remove('dead-fly')
+                }, 85)    
+            // } else if (swatNum.length > 5) {
+            //     console.log('enough')
+            } else {
+                clearInterval(interval)
+            }
+        }, 100)
+    }
 }
