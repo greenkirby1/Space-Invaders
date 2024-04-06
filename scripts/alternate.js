@@ -1,26 +1,8 @@
-// ? Constant variables
-const invaders = {
-    gold: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-    purple: [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-    green: [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47],
-    brown: [54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64],
-    black: [71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81]
-}
-
-Object.keys(invaders)
-
-const player = {
-    weapon: 'swat',
-    playerCurrPos: 297,
-    lives: 3,
-    score: 0
-}
-
+// * Constant variables
 const grid = document.querySelector('.game-grid')
 const startPos = 297
 
-
-// ? Generate game grid
+// * Generate game grid
 const cols = 17
 const rows = 18
 const blkCount = cols * rows
@@ -42,73 +24,68 @@ function makeGrid() {
         // console.log(blks)
         if (i === startPos) {
             blk.classList.add('player')
+            // console.log(blks[297])
         }
     }
 }
 
-
-// ? State changing variables
+// * Changing variables
 let lives
 let score
 let playerCurrPos = 297
+let invadersCurrPos = [
+    [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+    [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+    [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47],
+    [54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64],
+    [71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81]
+]
 let invaderRow
 let invaderCol
+let interval
 
-
-// ? Cached elements
-// - start game button
+// * Cached elements
 const startBtn = document.getElementById('start')
 // - pause/resume button
 //   - const pauseBtn = document.getElementById('pause')
-// - play again button
-//   - const playAgainBtn = document.getElementById('play-again')
-// ~ mute button
-//   ~ mute audio when audio is playing
-//   ~ when audio is muted it can be unmuted
-//   ~ const muteBtn = document.getElementById('mute')
+const playAgainBtn = document.getElementById('play-again')
 const scoreEl = document.getElementById('score')
 const livesEl = document.getElementById('lives-display')
 const startScreen = document.querySelector('.start-container')
 const gameStartScreen = document.querySelector('.game-container')
+const endScreen = document.querySelector('.end-container')
+const invaderColors = ['black', 'brown', 'green', 'purple', 'gold']
+const result = document.querySelector('.end-result')
 
-
-// ? Event listners
-document.addEventListener('keydown', playerMove)
-document.addEventListener('keyup', playerShoot)
+// * Event listners
 startBtn.addEventListener('click', init)
+document.addEventListener('keydown', playerMove)
+// document.addEventListener('keyup', playerShoot)
 // pauseBtn.addEventListener('click', pause)
 // playAgainBtn.addEventListener('click', init)
-// ~ muteBtn.addEventListener('click', soundOff)
 
-
-// ? Functions
-init()
-
-function init() {
-    // console.log(evt.target, 'start clicked')
-    // if (gameStartScreen.style.display === 'none') {
-    //     startScreen.style.display = 'none'
-    //     gameStartScreen.style.display = 'flex'
-    // }
+// * Functions
+// Game start
+function init(evt) {
+    if (gameStartScreen.style.display === '') {
+        gameStartScreen.style.display = 'flex'
+        startScreen.style.display = 'none'
+    }
     makeGrid()
-    // delay for 2000ms then start game
     resetGame()
-    // invadersMove()
-
-}
-
-function pause() {
-
-}
-
-function soundOff() {
-
+    invadersMove()
+    // delay for 2000ms then start game
+    interval = setInterval(() => {
+        // invadersMove()
+        // invadersShoot()
+        
+    }, 2000)
+    // checkInvadersPresent()
+    // gameEnd()
 }
 
 function resetGame() {
-    
-    setInvaders()
-
+    // setInvaders()
     //reset score and lives to game start
     score = 0
     scoreEl.innerHTML = score
@@ -122,8 +99,6 @@ function playerMove(evt) {
         playerCurrPos--
     } else if (evt.code === 'ArrowRight' && playerCurrPos !== 305) {
         playerCurrPos++
-    } else {
-        console.log("Not Allowed")
     }
     // console.log(playerCurrPos)
     blks[playerCurrPos].classList.add('player')
@@ -133,50 +108,51 @@ function invadersMove() {
     let sideMove = 1
     let downMove = cols
 
-    let interval = setInterval(() => {
+    interval = setInterval(() => {
         // returns true when remainder is 16 (stop point)
-        let noMoveRight = invadersCurrPos.some(rowArr => {
-            return rowArr.some(invaderIdx => {
-                return invaderIdx % cols === cols - 1
-            })
-        })
+        let noMoveRight = invadersCurrPos.some(rowArr => rowArr.some(invaderIdx => invaderIdx % cols === cols - 1))
 
         // returns true when remainder is 0 (stop point)
-        let noMoveLeft = invadersCurrPos.some(rowArr => {
-            return rowArr.some(invaderIdx => {
-                return invaderIdx % cols === 0
-            })
-        })
+        let noMoveLeft = invadersCurrPos.some(rowArr => rowArr.some(invaderIdx => invaderIdx % cols === 0))
+
+        // returns true when invaderIdx > 289
+        let noMoveDown = invadersCurrPos.some(rowArr => rowArr.some(invaderIdx => invaderIdx > blks.length - cols))
 
         //remove classes from existing position
-        invadersCurrPos.forEach(rowArr => {
-            rowArr.forEach(blkValue => {
-                blks[blkValue].classList.remove(...invaderColors)
-            })
-        })
+        invadersCurrPos.forEach(rowArr => rowArr.forEach(blkValue => blks[blkValue].classList.remove(...invaderColors)))
 
-        //update all invadersCurrPos e.g. ++/-- need index
+        //update all invadersCurrPos
         invadersCurrPos.forEach((rowArr, index) => {
             rowArr.forEach((blkValue, idx) => {
-                if (noMoveRight === true) {
-                    sideMove = -1
-                    invadersCurrPos[index][idx] += downMove
+                invaderRow = index
+                invaderCol = invadersCurrPos[index].indexOf(blkValue)
+                if (noMoveDown === true) {
+                    console.log('no move down')
+                    clearInterval(interval)
+                    lives = 0
+                    livesEl.innerHTML = ''
+                    livesEl.classList.add('goo')
                     // invadersCurrPos[index][idx] += sideMove
                 } else if (noMoveLeft === true) {
                     sideMove = 1
+                    // invadersCurrPos[index][idx] += downMove
+                } else if (noMoveRight === true) {
+                    sideMove = -1
                     invadersCurrPos[index][idx] += downMove
                 }
                 invadersCurrPos[index][idx] += sideMove
-                console.log(invadersCurrPos[index], invadersCurrPos[idx])
+                // console.log(invadersCurrPos[index], invadersCurrPos[idx])
             })
-        }) 
+        })
+        // console.log(invaderRow, invaderCol)
 
         //check for 
 
 
         // add classes back in
         setInvaders()
-    }, 900)
+
+    }, 200)
 
     //clearInterval when row above player reached and also loose all lives
 }
@@ -184,27 +160,48 @@ function invadersMove() {
 function setInvaders() {
     //set start position for invaders
     //added different invader types for each row
-    invadersCurrPos.forEach(colArr => {
-        if (invadersCurrPos.indexOf(colArr) === 4) {
-            colArr.forEach(blkValue => {
+    invadersCurrPos.forEach(rowArr => {
+        if (invadersCurrPos.indexOf(rowArr) === 4) {
+            rowArr.forEach(blkValue => {
                 blks[blkValue].classList.add('invader', 'black')
             })
-        } else if (invadersCurrPos.indexOf(colArr) === 3) {
-            colArr.forEach(blkValue => {
+        } else if (invadersCurrPos.indexOf(rowArr) === 3) {
+            rowArr.forEach(blkValue => {
                 blks[blkValue].classList.add('invader', 'brown')
             })
-        } else if (invadersCurrPos.indexOf(colArr) === 2) {
-            colArr.forEach(blkValue => {
+        } else if (invadersCurrPos.indexOf(rowArr) === 2) {
+            rowArr.forEach(blkValue => {
                 blks[blkValue].classList.add('invader', 'green')
             })
-        } else if (invadersCurrPos.indexOf(colArr) === 1) {
-            colArr.forEach(blkValue => {
+        } else if (invadersCurrPos.indexOf(rowArr) === 1) {
+            rowArr.forEach(blkValue => {
                 blks[blkValue].classList.add('invader', 'purple')
             })
-        } else if (invadersCurrPos.indexOf(colArr) === 0) {
-            colArr.forEach(blkValue => {
+        } else if (invadersCurrPos.indexOf(rowArr) === 0) {
+            rowArr.forEach(blkValue => {
                 blks[blkValue].classList.add('invader', 'gold')
             })
         }
     })
+}
+
+function invadersShoot() { // has to come after invadersMove() due to logging of new positions
+    // Gets random index for invadersCurrPos variable
+    currShootRow = Math.floor(Math.random() * invadersCurrPos.length)
+    currShootCol = Math.floor(Math.random() * invadersCurrPos[0].length)
+
+    // Only gets index with invaders present
+    let shooterIdx = invadersCurrPos[currShootRow][currShootCol] + cols
+    // console.log(shooterIdx, shooterIdx - cols)
+
+    blks[shooterIdx].classList.add('goo-shoot')
+    let interval = setInterval(() => {
+        if (shooterIdx < playerCurrPos) {
+        blks[shooterIdx].classList.remove('goo-shoot')
+        shooterIdx += cols
+        // console.log(shooterIdx)
+        blks[shooterIdx].classList.add('goo-shoot')
+        }
+    }, 500)
+    
 }

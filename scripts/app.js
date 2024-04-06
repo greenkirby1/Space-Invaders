@@ -93,8 +93,7 @@ let interval
 const startBtn = document.getElementById('start')
 // - pause/resume button
 //   - const pauseBtn = document.getElementById('pause')
-// - play again button
-// const playAgainBtn = document.getElementById('play-again')
+const playAgainBtn = document.getElementById('play-again')
 // ~ mute button
 //   ~ mute audio when audio is playing
 //   ~ when audio is muted it can be unmuted
@@ -133,10 +132,10 @@ function init(evt) {
     interval = setInterval(() => {
         // invadersMove()
         invadersShoot()
-
+        
     }, 2000)
-    checkInvadersPresent()
-    gameEnd()
+    // checkInvadersPresent()
+    // gameEnd()
 }
 
 
@@ -169,10 +168,14 @@ function invadersMove() {
             })
         })
 
+        
+
         //remove classes from existing position
         invadersCurrPos.forEach(rowArr => {
             rowArr.forEach(blkValue => {
                 blks[blkValue].classList.remove(...invaderColors)
+                blks[blkValue].dataset.arrIdx = undefined
+                blks[blkValue].dataset.rowIdx = undefined
             })
         })
 
@@ -190,7 +193,7 @@ function invadersMove() {
                     invadersCurrPos[index][idx] += downMove
                 }
                 invadersCurrPos[index][idx] += sideMove
-                console.log(invadersCurrPos[index], invadersCurrPos[idx])
+                // console.log(invadersCurrPos[index], invadersCurrPos[idx])
             })
         })
         // console.log(invaderRow, invaderCol)
@@ -230,10 +233,15 @@ function invadersShoot() { // has to come after invadersMove() due to logging of
 function setInvaders() {
     //set start position for invaders
     //added different invader types for each row
-    invadersCurrPos.forEach(rowArr => {
+
+    invadersCurrPos.forEach((rowArr, idx) => {
+        rowArr.forEach((blkValue, index) => {
+            blks[blkValue].dataset.arrIdx = idx
+            blks[blkValue].dataset.rowIdx = index 
+        })
         if (invadersCurrPos.indexOf(rowArr) === 4) {
             rowArr.forEach(blkValue => {
-                blks[blkValue].classList.add('invader', 'black')
+                blks[blkValue].classList.add('invader', 'black')  // `r${index}c${}
             })
         } else if (invadersCurrPos.indexOf(rowArr) === 3) {
             rowArr.forEach(blkValue => {
@@ -273,12 +281,17 @@ function playerShoot(evt) {
     // console.log(shootOrigin)
     if (evt.code === 'Space') {
         blks[shootOrigin].classList.add('swat')
-        interval = setInterval(() => {
+        let interval = setInterval(() => {
             blks[shootOrigin]?.classList.remove('swat')
             // const swatNum = document.querySelectorAll('.swat')
             if (shootOrigin > cols - 1) {
                 shootOrigin -= cols
                 blks[shootOrigin].classList.add('swat')
+                if (blks[shootOrigin].classList.contains('invader')) {
+                    let el = blks[shootOrigin]
+                    console.log(invadersCurrPos[el.dataset.arrIdx].splice(el.dataset.rowIdx, 1))
+
+                }
                 if (blks[shootOrigin].classList.contains('black')) {
                     score += 100
                     scoreEl.innerHTML = score
@@ -335,9 +348,9 @@ function checkInvadersPresent() {
         blk.classList.contains('gold') === true
     })
     
-    if (haveInvader !== false) {
+    if (haveInvader !== false && score === 1000) {
         clearInterval(interval)
-        gameStartScreen,style.display = 'none'
+        gameStartScreen.style.display = 'none'
         endScreen.style.display = 'flex'
         result.innerHTML = 'You defeated the fly legion!'
     }

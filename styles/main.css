@@ -12,13 +12,11 @@ body {
     /* display: none; */
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
 }
 
 .start-scene {
     height: 100vmin;
-    flex-grow: 2;
-    background-image: url('../assets/Fly-general.PNG');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -29,16 +27,18 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex-grow: 1;
+    max-width: 850px;
 }
 
 .leaderboard {
-    flex-grow: 2;
     height: 100vmin;
+    width: 30vmin
 }
 
 h1 {
-    font-size: 7vmin;
+    font-size: 6vmin;
+    font-family: "Press Start 2P", sans-serif;
+    text-align: center;
 }
 
 .rules {
@@ -47,6 +47,7 @@ h1 {
     justify-content: center;
     text-align: center;
     font-size: 3.5vmin;
+    font-family: "Pixelify Sans", sans-serif;
 }
 
 li {
@@ -63,11 +64,12 @@ li {
 }
 
 #start {
-    font-size: 4vmin;
-    padding: 1.5vmin 5vmin;
+    font-size: 3.5vmin;
+    padding: 2vmin 5vmin;
     margin: 4vmin;
     border: none;
     border-radius: 10px;
+    font-family: "Press Start 2P", sans-serif;
 }
 
 
@@ -126,8 +128,9 @@ li {
 .player,
 .swat,
 .invader,
-.invader-goo,
-.dead-fly {
+.goo-shoot,
+.dead-fly,
+.goo {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -137,7 +140,9 @@ li {
     background-image: url('../assets/Hand.png');
 }
 
-
+.goo-shoot {
+    background-image: url('../assets/Goo-shoot.PNG');
+}
 
 .black {
     background-image: url('../assets/Black-1.png');
@@ -167,6 +172,6 @@ li {
     background-image: url('../assets/Fly-swat.png');
 }
 
-.goo-shoot {
-    background-image: url('../assets/Goo-shoot.PNG');
+.goo {
+    background-image: url('../assets/Goo.png');
 }
