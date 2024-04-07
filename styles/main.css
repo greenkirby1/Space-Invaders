@@ -46,8 +46,7 @@ h1 {
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    font-size: 3.5vmin;
-    font-family: "Pixelify Sans", sans-serif;
+    font: 3.5vmin "Pixelify Sans", sans-serif;
 }
 
 li {
@@ -56,6 +55,7 @@ li {
     align-items: center;
     justify-content: space-evenly;
     padding: 1.5vmin;
+    font: 3vmin "Press Start 2P", sans-serif;
 }
 
 .flies {
@@ -120,8 +120,17 @@ li {
     padding: 4vmin 0;
 }
 
+#mute {
+    border: none;
+    border-radius: 10px;
+    font-family: "Press Start 2P", sans-serif;
+}
+
 #pause {
     margin-left: 3vmin;
+    border: none;
+    border-radius: 10px;
+    font-family: "Press Start 2P", sans-serif;
 }
 
 /* in-game elements */

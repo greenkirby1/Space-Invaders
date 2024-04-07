@@ -8,10 +8,14 @@
 // - Optional
 //   - Big invader passes through at the top row which gives players bonus points when destroyed
 //   - Movement of invaders increases with each new row
+//   - Shields that take 10 hits from invader or player lasers
 //   - Highscore board usins localStorage
 
 
 // ? Constant variables
+const gameSound = document.getElementById('gameplay-music')
+const hitSound = document.getElementById('hit')
+const squishSound = document.getElementById('squish')
 const grid = document.querySelector('.game-grid')
 const startPos = 297
 
@@ -30,14 +34,14 @@ function makeGrid() {
         blk.style.height = `${100 / rows}%`
         blks.push(blk)
         blks.forEach((blk) => {
-            const blkId = `${blks.indexOf(blk)}`
-            return blk.dataset.id = blkId
+            return blk.classList.add('blocks')
         })
         grid.append(blk)
         if (i === startPos) {
             blk.classList.add('player')
         }
     }
+    console.log(blks)
 }
 
 // ? State changing variables
@@ -51,20 +55,14 @@ let invadersCurrPos = [
     [54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64],
     [71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81]
 ]
-// let interval
+
 let invaderMoveInterval
 let invaderShootInterval
 let pauseInterval
 let pause = false
+const intArr = [1,2]
+let isMuted = false
 
-
-
-
-//          - pause interval of invaders moving
-//          - check if (lives === 0)
-//          - resume interval of invaders moving
-//          - element.classList.add('player')  // to resume game 
-//     }
 
 // ~ setInterval time decrement
 //   ~ for (invaders row change === true) {
@@ -79,10 +77,7 @@ let pause = false
 const startBtn = document.getElementById('start')
 const pauseBtn = document.getElementById('pause')
 const playAgainBtn = document.getElementById('play-again')
-// ~ mute button
-//   ~ mute audio when audio is playing
-//   ~ when audio is muted it can be unmuted
-//   ~ const muteBtn = document.getElementById('mute')
+const muteBtn = document.getElementById('mute')
 const scoreEl = document.getElementById('score')
 const livesEl = document.getElementById('lives-display')
 const startScreen = document.querySelector('.start-container')
@@ -97,47 +92,70 @@ const result = document.querySelector('.end-result')
 startBtn.addEventListener('click', init)
 document.addEventListener('keydown', playerMove)
 document.addEventListener('keyup', playerShoot)
+playAgainBtn.addEventListener('click', restart)
 pauseBtn.addEventListener('click', pauseGame)
-playAgainBtn.addEventListener('click', init)
-// ~ muteBtn.addEventListener('click', soundOff)
+muteBtn.addEventListener('click', soundOff)
 
 
 
 // ? Functions
-
 function init(evt) {
-    if (gameStartScreen.style.display === '') {
+    if (gameStartScreen.style.display === '' || 'none') {
         gameStartScreen.style.display = 'flex'
         startScreen.style.display = 'none'
+        endScreen.style.display = 'none'
+        makeGrid()
+        resetGame()
+        invadersMove()
+        invadersShoot()
+        playSound(gameSound)
     }
-    makeGrid()
-    resetGame()
-    invadersMove()
-    invadersShoot()
+    console.log(blks)
+}
+
+function restart(evt) {
+    if (endScreen.style.display === 'flex') {
+        endScreen.style.display = 'none'
+        startScreen.style.display = 'flex'
+    }
+    console.log(blks)
+}
+
+function pauseGame(evt) {
+    if (pause === false) {
+        pause = true
+        intArr.forEach(int => {
+            clearInterval(int)
+        })
+        pauseBtn.innerHTML = 'RESUME'
+    } else if (pause === true) {
+        pause = false
+        invadersMove()
+        invadersShoot()
+        pauseBtn.innerHTML = 'PAUSE'
+        
+    } 
 }
 
 function resetGame() {
-    setInvaders()
     //reset score and lives to game start
     score = 0
     scoreEl.innerHTML = score
     lives = 3
     livesEl.innerHTML = '❤️'.repeat(lives)
+    // intArr.forEach(int => {
+    //     clearInterval(int)
+    // })
+    // invadersCurrPos = [
+    //     [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+    //     [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+    //     [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47],
+    //     [54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64],
+    //     [71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81]
+    // ]
+    setInvaders()
 }
 
-function pauseGame() {
-    if (pause === false) {
-        pause = true
-        pauseInterval = clearTimeout(invaderMoveInterval)
-        pauseBtn.innerHTML = 'Resume'
-    } else if (pause === true) {
-        pause = false
-        invadersMove()
-        invadersShoot()
-        pauseBtn.innerHTML = 'Pause'
-        
-    } 
-}
 
 function setInvaders() {
     //set start position for invaders
@@ -199,7 +217,7 @@ function invadersMove() {
                     lives = 0
                     livesEl.innerHTML = '❤️'.repeat(lives)
                     livesEl.classList.add('goo')
-                    setTimeout(gameEnd(), 100)
+                    setTimeout(gameEnd(), 50)
                 } else if (noMoveLeft === true) {
                     sideMove = 1
                     invadersCurrPos[index][idx] += downMove
@@ -226,6 +244,8 @@ function invadersShoot() { // has to come after invadersMove() due to logging of
         let shooterIdx = invadersCurrPos[currShootRow][currShootCol] + cols
 
         blks[shooterIdx]?.classList.add('goo-shoot')
+        squishSound.play()
+        console.log('sound play')
         let interval = setInterval(() => {
             if (shooterIdx < playerCurrPos) {
                 blks[shooterIdx]?.classList.remove('goo-shoot')
@@ -237,6 +257,7 @@ function invadersShoot() { // has to come after invadersMove() due to logging of
                     lives--
                     livesEl.innerHTML = '❤️'.repeat(lives)
                     blks[shooterIdx].classList.remove('goo-shoot')
+                    gameEnd()
                     setTimeout(() => {
                         blks[shooterIdx].classList.remove('goo')
                     }, 100)
@@ -244,9 +265,8 @@ function invadersShoot() { // has to come after invadersMove() due to logging of
             } else {
                 blks[shooterIdx]?.classList.remove('goo-shoot')
             }
-        }, 450)
-    }, 1000)
-    gameEnd()
+        }, 400)
+    }, 1200)
 }
 
 function playerMove(evt) {
@@ -272,38 +292,42 @@ function playerShoot(evt) {
                 blks[shootOrigin].classList.add('swat')
                 if (blks[shootOrigin].classList.contains('invader')) {
                     let el = blks[shootOrigin]
-                    // console.log(invadersCurrPos[el.dataset.arrIdx].splice(el.dataset.rowIdx, 1))
                     invadersCurrPos[el.dataset.arrIdx]?.splice(el.dataset.rowIdx, 1)
                     blks[shootOrigin].classList.remove('invader')
                 }
                 if (blks[shootOrigin].classList.contains('black')) {
+                    playSound(hitSound)
                     score += 100
                     scoreEl.innerHTML = score
                     blks[shootOrigin].classList.remove('black', 'swat')
                     clearInterval(interval)
                     blks[shootOrigin].classList.add('dead-fly')
                 } else if (blks[shootOrigin].classList.contains('brown')) {
+                    playSound(hitSound)
                     score += 200
                     scoreEl.innerHTML = score
                     blks[shootOrigin].classList.remove('brown', 'swat')
                     clearInterval(interval)
                     blks[shootOrigin].classList.add('dead-fly')
-
+                    
                 } else if (blks[shootOrigin].classList.contains('green')) {
+                    playSound(hitSound)
                     score += 300
                     scoreEl.innerHTML = score
                     blks[shootOrigin].classList.remove('green', 'swat')
                     clearInterval(interval)
                     blks[shootOrigin].classList.add('dead-fly')
-
+                    
                 } else if (blks[shootOrigin].classList.contains('purple')) {
+                    playSound(hitSound)
                     score += 500
                     scoreEl.innerHTML = score
                     blks[shootOrigin].classList.remove('purple', 'swat')
                     clearInterval(interval)
                     blks[shootOrigin].classList.add('dead-fly')
-
+                    
                 } else if (blks[shootOrigin].classList.contains('gold')) {
+                    playSound(hitSound)
                     score += 1000
                     scoreEl.innerHTML = score
                     blks[shootOrigin].classList.remove('gold', 'swat')
@@ -323,7 +347,7 @@ function playerShoot(evt) {
 }
 
 function checkInvadersPresent() {
-    let haveInvader = blks.some(blk => {
+    let haveInvader = blks.some(blk => {    
         return blk.classList.contains('invader') === true
     })
 
@@ -342,13 +366,35 @@ function gameEnd() {
         console.log('game end')
         clearInterval(invaderMoveInterval)
         clearInterval(invaderShootInterval)
+        // blks.forEach(blk => blks[blk].remove())
         gameStartScreen.style.display = 'none'
         endScreen.style.display = 'flex'
         result.innerHTML = 'Mourn for the loss of your cake.'
     }
 }
 
+function playSound(sound) {
+    sound.src = `assets/${sound.id}.mp3`
+    if (sound === gameSound) {
+        sound.volume = 0.15
+    } else {
+        sound.volume = 0.3
+    }
+    sound.play()
+}
 
-function soundOff() {
-
+function soundOff(evt) {
+    if (isMuted === false) {
+        isMuted = true
+        gameSound.muted = true
+        squishSound.muted = true
+        hitSound.muted = true
+        muteBtn.innerHTML = 'UNMUTE'
+    } else if (isMuted === true) {
+        isMuted = false
+        gameSound.muted = false
+        squishSound.muted = false
+        hitSound.muted = false
+        muteBtn.innerHTML = 'MUTE'
+    }
 }

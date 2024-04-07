@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Invasion of the Flies</title>
+    <title>Invasion of the Flies</title>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +16,7 @@
     <section class="start-container">
         <img class="start-scene-left" src="assets/Fly-general.PNG" alt="gly general start screen">
         <div class="start-wrapper">
-            <h1>The Invasion of the Flies</h1>
+            <h1>Invasion of the Flies</h1>
             <div class="rules">
                 <h2>Protect the cake!<br>Kill those flies!</h2>
                 <li><img class="flies" src="assets/Black-1.png" alt="black fly"> = 100</li>
@@ -43,8 +43,8 @@
             <!-- gameplay grid -->
         </div>
         <div class="bottom-wrapper">
-            <button id="mute">Mute</button>
-            <button id="pause">Pause</button>
+            <button id="mute">MUTE</button>
+            <button id="pause">PAUSE</button>
         </div>
     </section>
 
@@ -52,7 +52,11 @@
     <section class="end-container">
         <h2 class="end-result"></h2>
         <div class="end-scene"></div>
-        <button id="play-again">Play Again</button>
+        <button id="play-again">RESTART</button>
     </section>
+
+    <audio id="gameplay-music" src="assets/gameplay-music.mp3"></audio>
+    <audio id="hit" src="assets/hit.mp3"></audio>
+    <audio id="squish" src="assets/squish.mp3"></audio>
 </body>
 </html>
