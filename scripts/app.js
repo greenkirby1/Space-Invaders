@@ -56,8 +56,8 @@ let invadersCurrPos = [
 let invaderRow
 let invaderCol
 let interval
-let moveInterval
-let shootInterval
+let invaderMoveInterval
+let invaderShootInterval
 
 //   - if (blks with .invader-laser && .player === true) {
 //          - element.classList.add('explosion')  // css background-image: explosion
@@ -119,11 +119,10 @@ function init(evt) {
     makeGrid()
     resetGame()
     invadersMove()
-    // shootInterval = setInterval(() => {
+    // invaderShootInterval = setInterval(() => {
         invadersShoot()
         // }, 2000)
     checkInvadersPresent()
-    gameEnd()
         
 }
 
@@ -172,7 +171,7 @@ function invadersMove() {
     let sideMove = 1
     let downMove = cols
 
-    moveInterval = setInterval(() => {
+    invaderMoveInterval = setInterval(() => {
         // border conditions
         let noMoveRight = invadersCurrPos.some(rowArr => rowArr.some(invaderIdx => invaderIdx % cols === cols - 1))
         let noMoveLeft = invadersCurrPos.some(rowArr => rowArr.some(invaderIdx => invaderIdx % cols === 0))
@@ -192,7 +191,7 @@ function invadersMove() {
             rowArr.forEach((blkValue, idx) => {
                 if (noMoveDown === true) {
                     console.log('no move down')
-                    clearInterval(moveInterval)
+                    clearInterval(invaderMoveInterval)
                     lives = 0
                     livesEl.innerHTML = ''
                     livesEl.classList.add('goo')
@@ -212,7 +211,7 @@ function invadersMove() {
 }
 
 function invadersShoot() { // has to come after invadersMove() due to logging of new positions
-    shootInterval = setInterval(() => {
+    invaderShootInterval = setInterval(() => {
         // Gets random index for invadersCurrPos variable
         currShootRow = Math.floor(Math.random() * invadersCurrPos.length)
         currShootCol = Math.floor(Math.random() * invadersCurrPos[0].length)
@@ -239,6 +238,7 @@ function invadersShoot() { // has to come after invadersMove() due to logging of
             } else {
                 blks[shooterIdx]?.classList.remove('goo-shoot')
             }
+            gameEnd()
         }, 500)   
     }, 1500)
 }
@@ -313,6 +313,7 @@ function playerShoot(evt) {
             } else {
                 clearInterval(interval)
             }
+            checkInvadersPresent()
         }, 100)
     }
 }
@@ -323,8 +324,9 @@ function checkInvadersPresent() {
     })
     
     if (haveInvader !== true) {
-        clearInterval(moveInterval)
-        clearInterval(shootInterval)
+        console.log('you win')
+        clearInterval(invaderMoveInterval)
+        clearInterval(invaderShootInterval)
         gameStartScreen.style.display = 'none'
         endScreen.style.display = 'flex'
         result.innerHTML = 'You defeated the fly legion!'
@@ -334,9 +336,9 @@ function checkInvadersPresent() {
 function gameEnd() {
     if (lives === 0 ) {
         console.log('game end')
-        clearInterval(moveInterval)
-        clearInterval(shootInterval)
-        gameStartScreen,style.display = 'none'
+        clearInterval(invaderMoveInterval)
+        clearInterval(invaderShootInterval)
+        gameStartScreen.style.display = 'none'
         endScreen.style.display = 'flex'
         result.innerHTML = 'Mourn for the loss of your cake.'
     }
