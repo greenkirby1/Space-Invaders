@@ -3,12 +3,11 @@
 //// - Top row of invaders shoot lasers at player
 //// - Player can move right/left and space to shoot invaders with laser
 //// - Invaders explode upon impact with player's laser
-// - Player has 3 lives and loses a life when invaders' lasers collide with player
+//// - Player has 3 lives and loses a life when invaders' lasers collide with player
 //// - When player loses all lives or invaders reaches row (row 10) where player is in the game is over
 // - Optional
 //   - Big invader passes through at the top row which gives players bonus points when destroyed
 //   - Movement of invaders increases with each new row
-//   - Shields that take 10 hits from invader or player lasers
 //   - Highscore board usins localStorage
 
 
@@ -52,18 +51,14 @@ let invadersCurrPos = [
     [54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64],
     [71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81]
 ]
-
-let invaderRow
-let invaderCol
-let interval
+// let interval
 let invaderMoveInterval
 let invaderShootInterval
+let pauseInterval
+let pause = false
 
-//   - if (blks with .invader-laser && .player === true) {
-//          - element.classList.add('explosion')  // css background-image: explosion
-//          - element.classList.remove('invader-laser player')
-//          - player lose one life (lives--)
-//     }
+
+
 
 //          - pause interval of invaders moving
 //          - check if (lives === 0)
@@ -82,8 +77,7 @@ let invaderShootInterval
 
 // ? Cached elements
 const startBtn = document.getElementById('start')
-// - pause/resume button
-//   - const pauseBtn = document.getElementById('pause')
+const pauseBtn = document.getElementById('pause')
 const playAgainBtn = document.getElementById('play-again')
 // ~ mute button
 //   ~ mute audio when audio is playing
@@ -103,8 +97,8 @@ const result = document.querySelector('.end-result')
 startBtn.addEventListener('click', init)
 document.addEventListener('keydown', playerMove)
 document.addEventListener('keyup', playerShoot)
-// pauseBtn.addEventListener('click', pause)
-// playAgainBtn.addEventListener('click', init)
+pauseBtn.addEventListener('click', pauseGame)
+playAgainBtn.addEventListener('click', init)
 // ~ muteBtn.addEventListener('click', soundOff)
 
 
@@ -119,11 +113,7 @@ function init(evt) {
     makeGrid()
     resetGame()
     invadersMove()
-    // invaderShootInterval = setInterval(() => {
-        invadersShoot()
-        // }, 2000)
-    checkInvadersPresent()
-        
+    invadersShoot()
 }
 
 function resetGame() {
@@ -135,13 +125,27 @@ function resetGame() {
     livesEl.innerHTML = '❤️'.repeat(lives)
 }
 
+function pauseGame() {
+    if (pause === false) {
+        pause = true
+        pauseInterval = clearTimeout(invaderMoveInterval)
+        pauseBtn.innerHTML = 'Resume'
+    } else if (pause === true) {
+        pause = false
+        invadersMove()
+        invadersShoot()
+        pauseBtn.innerHTML = 'Pause'
+        
+    } 
+}
+
 function setInvaders() {
     //set start position for invaders
     //added different invader types for each row
     invadersCurrPos.forEach((rowArr, index) => {
         rowArr.forEach((blkValue, idx) => {
             blks[blkValue].dataset.arrIdx = index
-            blks[blkValue].dataset.rowIdx = idx 
+            blks[blkValue].dataset.rowIdx = idx
         })
         if (invadersCurrPos.indexOf(rowArr) === 4) {
             rowArr.forEach(blkValue => {
@@ -175,7 +179,7 @@ function invadersMove() {
         // border conditions
         let noMoveRight = invadersCurrPos.some(rowArr => rowArr.some(invaderIdx => invaderIdx % cols === cols - 1))
         let noMoveLeft = invadersCurrPos.some(rowArr => rowArr.some(invaderIdx => invaderIdx % cols === 0))
-        let noMoveDown = invadersCurrPos.some(rowArr => rowArr.some(invaderIdx => invaderIdx > blks.length - cols))
+        let noMoveDown = invadersCurrPos.some(rowArr => rowArr.some(invaderIdx => invaderIdx > blks.length - 2 * cols))
 
         // remove classes from existing position
         invadersCurrPos.forEach(rowArr => {
@@ -190,13 +194,15 @@ function invadersMove() {
         invadersCurrPos.forEach((rowArr, index) => {
             rowArr.forEach((blkValue, idx) => {
                 if (noMoveDown === true) {
-                    console.log('no move down')
                     clearInterval(invaderMoveInterval)
+                    console.log('no move down')
                     lives = 0
-                    livesEl.innerHTML = ''
+                    livesEl.innerHTML = '❤️'.repeat(lives)
                     livesEl.classList.add('goo')
+                    setTimeout(gameEnd(), 100)
                 } else if (noMoveLeft === true) {
                     sideMove = 1
+                    invadersCurrPos[index][idx] += downMove
                 } else if (noMoveRight === true) {
                     sideMove = -1
                     invadersCurrPos[index][idx] += downMove
@@ -238,9 +244,9 @@ function invadersShoot() { // has to come after invadersMove() due to logging of
             } else {
                 blks[shooterIdx]?.classList.remove('goo-shoot')
             }
-            gameEnd()
-        }, 500)   
-    }, 1500)
+        }, 450)
+    }, 1000)
+    gameEnd()
 }
 
 function playerMove(evt) {
@@ -308,12 +314,10 @@ function playerShoot(evt) {
                 setTimeout(() => {
                     blks[shootOrigin].classList.remove('dead-fly')
                 }, 85)
-                // } else if (swatNum.length > 5) {
-                //     console.log('enough')
+                checkInvadersPresent()
             } else {
                 clearInterval(interval)
             }
-            checkInvadersPresent()
         }, 100)
     }
 }
@@ -322,8 +326,8 @@ function checkInvadersPresent() {
     let haveInvader = blks.some(blk => {
         return blk.classList.contains('invader') === true
     })
-    
-    if (haveInvader !== true) {
+
+    if (haveInvader === false) {
         console.log('you win')
         clearInterval(invaderMoveInterval)
         clearInterval(invaderShootInterval)
@@ -334,7 +338,7 @@ function checkInvadersPresent() {
 }
 
 function gameEnd() {
-    if (lives === 0 ) {
+    if (lives === 0) {
         console.log('game end')
         clearInterval(invaderMoveInterval)
         clearInterval(invaderShootInterval)
@@ -344,13 +348,6 @@ function gameEnd() {
     }
 }
 
-
-
-
-
-function pause() {
-
-}
 
 function soundOff() {
 

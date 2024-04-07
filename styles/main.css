@@ -15,7 +15,7 @@ body {
     justify-content: space-around;
 }
 
-.start-scene {
+.start-scene-left, .start-scene-right {
     height: 100vmin;
     background-repeat: no-repeat;
     background-size: cover;
@@ -32,7 +32,7 @@ body {
 
 .leaderboard {
     height: 100vmin;
-    width: 30vmin
+    width: 30vmin;
 }
 
 h1 {
