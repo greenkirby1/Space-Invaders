@@ -75,7 +75,7 @@ let isMuted = false
 
 // ? Cached elements
 const startBtn = document.getElementById('start')
-const playAgainBtn = document.getElementById('play-again')
+const restartBtn = document.getElementById('restart')
 const muteBtn = document.getElementById('mute')
 const pauseBtn = document.getElementById('pause')
 const scoreEl = document.getElementById('score')
@@ -84,6 +84,7 @@ const startScreen = document.querySelector('.start-container')
 const gameStartScreen = document.querySelector('.game-container')
 const endScreen = document.querySelector('.end-container')
 const result = document.querySelector('.end-result')
+const endPanel = document.querySelector('.end-scene')
 const finalScore = document.getElementById('final-score')
 const invaderColors = ['black', 'brown', 'green', 'purple', 'gold']
 
@@ -93,7 +94,7 @@ const invaderColors = ['black', 'brown', 'green', 'purple', 'gold']
 startBtn.addEventListener('click', init)
 document.addEventListener('keydown', playerMove)
 document.addEventListener('keyup', playerShoot)
-playAgainBtn.addEventListener('click', restart)
+restartBtn.addEventListener('click', restart)
 pauseBtn.addEventListener('click', pauseGame)
 muteBtn.addEventListener('click', soundOff)
 
@@ -337,13 +338,15 @@ function checkInvadersPresent() {
         blk.classList.contains('purple') || 
         blk.classList.contains('gold') === true
     })
-
+    
     if (haveInvader === false) {
-        console.log('you win')
+        // console.log('you win')
         clearInterval(invaderMoveInterval)
         clearInterval(invaderShootInterval)
         gameStartScreen.style.display = 'none'
         endScreen.style.display = 'flex'
+        endScreen.classList.add('good-end')
+        endPanel.classList.add('good')
         result.innerHTML = 'You defeated the fly legion!'
         finalScore.innerHTML = `${score}`
     }
@@ -351,11 +354,13 @@ function checkInvadersPresent() {
 
 function gameEnd() {
     if (lives === 0) {
-        console.log('game end')
+        // console.log('game end')
         clearInterval(invaderMoveInterval)
         clearInterval(invaderShootInterval)
         gameStartScreen.style.display = 'none'
         endScreen.style.display = 'flex'
+        endScreen.classList.add('bad-end')
+        endPanel.classList.add('bad')
         result.innerHTML = 'Mourn for the loss of your cake.'
         finalScore.innerHTML = `${score}`
     }
