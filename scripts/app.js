@@ -114,11 +114,12 @@ function init(evt) {
 }
 
 function restart(evt) {
-    if (endScreen.style.display === 'flex') {
-        endScreen.style.display = 'none'
-        startScreen.style.display = 'flex'
-    }
-    console.log(blks)
+    // if (endScreen.style.display === 'flex') {
+    //     endScreen.style.display = 'none'
+    //     startScreen.style.display = 'flex'
+    // }
+    // console.log(blks)
+    document.location.reload()
 }
 
 function pauseGame(evt) {
@@ -291,9 +292,9 @@ function playerShoot(evt) {
                 shootOrigin -= cols
                 blks[shootOrigin].classList.add('swat')
                 if (blks[shootOrigin].classList.contains('invader')) {
+                    blks[shootOrigin].classList.remove('invader')
                     let el = blks[shootOrigin]
                     invadersCurrPos[el.dataset.arrIdx]?.splice(el.dataset.rowIdx, 1)
-                    blks[shootOrigin].classList.remove('invader')
                 }
                 if (blks[shootOrigin].classList.contains('black')) {
                     playSound(hitSound)
@@ -334,7 +335,6 @@ function playerShoot(evt) {
                     clearInterval(interval)
                     blks[shootOrigin].classList.add('dead-fly')
                 }
-
                 setTimeout(() => {
                     blks[shootOrigin].classList.remove('dead-fly')
                 }, 85)
@@ -348,8 +348,14 @@ function playerShoot(evt) {
 
 function checkInvadersPresent() {
     let haveInvader = blks.some(blk => {    
-        return blk.classList.contains('invader') === true
+        // return blk.classList.contains('invader') === true
+        return blk.classList.contains('black') ||
+        blk.classList.contains('brown') ||
+        blk.classList.contains('green') ||
+        blk.classList.contains('purple') || 
+        blk.classList.contains('gold') === true
     })
+    // console.log(haveInvader)
 
     if (haveInvader === false) {
         console.log('you win')
@@ -366,7 +372,6 @@ function gameEnd() {
         console.log('game end')
         clearInterval(invaderMoveInterval)
         clearInterval(invaderShootInterval)
-        // blks.forEach(blk => blks[blk].remove())
         gameStartScreen.style.display = 'none'
         endScreen.style.display = 'flex'
         result.innerHTML = 'Mourn for the loss of your cake.'
