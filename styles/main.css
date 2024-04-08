@@ -10,8 +10,8 @@ body {
 
 /* * start screen */
 .start-container {
-    /* display: none; */
-    display: flex;
+    display: none;
+    /* display: flex; */
     align-items: flex-end;
     justify-content: space-between;
     background-image: url('../assets/Start-bg.GIF');
@@ -36,10 +36,6 @@ body {
     max-width: 850px;
 }
 
-/* .leaderboard {
-    height: 100vmin;
-    width: 30vmin;
-} */
 
 h1 {
     font: 6vmin "Press Start 2P", sans-serif;
@@ -60,7 +56,7 @@ h1 {
     border: 10px solid #e9ff00;
 }
 
-li {
+.points {
     list-style: none;
     display: flex;
     align-items: center;
@@ -153,17 +149,21 @@ li {
 
 /* * gameover screen */
 .end-container {
-    /* display: flex; */
-    display: none;
+    display: flex;
+    /* display: none; */
+    height: 100vmin;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-evenly;
 }
 
 form {
+    width: 30vmin;
     display: flex;
     flex-direction: column;
     align-items:flex-start;
-    font: 3.5vmin "Pixelify Sans", sans-serif;
+    padding: 3vmin;
+    font: 1.8vmin "Pixelify Sans", sans-serif;
+    background-color: white;
 }
 
 .mid-wrapper {
@@ -171,6 +171,7 @@ form {
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
+    max-width: 50vmin;
 }
 
 #restart {
@@ -185,7 +186,7 @@ form {
 }
 
 .good-end {
-    font: 6vmin "Press Start 2P", sans-serif;
+    font: 3vmin "Press Start 2P", sans-serif;
     text-align: center;
     text-shadow: 0px 6px 0px #a09211;
     color: #ffee00;
@@ -200,7 +201,7 @@ form {
 }
 
 .bad-end {
-    font: 6vmin "Press Start 2P", sans-serif;
+    font: 3vmin "Press Start 2P", sans-serif;
     text-align: center;
     text-shadow: 0px 6px 0px #6c6c6c;
     color: white;
@@ -212,6 +213,18 @@ form {
 
 .bad-bg {
     background-color: black;
+}
+
+.leaderboard {
+    height: 80vmin;
+    min-width: 30vmin;
+    background-color: white;
+    border-radius: 10px;
+    border: 10px solid #e9ff00;
+}
+
+ol {
+    font: 2vmin 'Press Start 2P', sans-serif;
 }
 
 /* * in-game elements */

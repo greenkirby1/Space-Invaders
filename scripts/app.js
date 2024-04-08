@@ -76,9 +76,6 @@ let storageValue
 //          ~ interval++
 //   ~ }
 
-// ~ leaderboard
-//   ~ leaderboard using localStorage
-
 
 // ? Cached elements
 const startBtn = document.getElementById('start')
@@ -98,6 +95,7 @@ const invaderColors = ['black', 'brown', 'green', 'purple', 'gold']
 const scoreSubmitBtn = document.getElementById('high-score')
 const nameInput = document.querySelector('#name')
 const leaderboard = document.querySelector('.leaderboard')
+const scoreList = document.querySelector('ol')
 
 
 
@@ -135,6 +133,7 @@ function init(evt) {
 }
 
 function restart(evt) {
+    // scoreList.remove()
     document.location.reload()
 }
 
@@ -369,6 +368,8 @@ function checkInvadersPresent() {
         result.innerHTML = 'You defeated the fly legion!'
         finalScore.innerHTML = `${score}`
     }
+    getScore()
+    addToLeaderboard()
 }
 
 function gameEnd() {
@@ -385,6 +386,8 @@ function gameEnd() {
         result.innerHTML = 'Mourn for the loss of your cake.'
         finalScore.innerHTML = `${score}`
     }
+    getScore()
+    addToLeaderboard()
 }
 
 function playSound(sound) {
@@ -418,6 +421,7 @@ function soundOff(evt) {
 function saveScore(evt) {
     playerName = nameInput.value
     localStorage.setItem(`${playerName}`, `${score}`)
+
 }
 
 function getScore() {
@@ -427,11 +431,19 @@ function getScore() {
         storageValue = localStorage.getItem(storageKey)
         scoreObj[storageKey] = storageValue
     }
-    // console.log(scoreObj)
 }
 
 function addToLeaderboard() {
-    scoreInput = doument.createElement('li')
-    scoreInput.innerHTML = 
-    leaderboard.appendChild = scoreInput
+    const sortedScoreObj = Object.fromEntries(
+        Object.entries(scoreObj).sort((a, b) => a[1] - b[1]).reverse()
+    )
+    // console.log(sortedScoreObj)
+    for (const [key, value] of Object.entries(sortedScoreObj)) {
+        // if (scoreList.length < 6) {
+            scoreInput = document.createElement('li')
+            scoreList.appendChild(scoreInput)
+            scoreInput.innerHTML = `${key}         ${value}`
+            console.log(scoreInput)
+        // }
+    }
 }
