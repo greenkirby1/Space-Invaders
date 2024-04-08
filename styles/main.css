@@ -11,15 +11,16 @@ body {
 .start-container {
     /* display: none; */
     display: flex;
-    align-items: center;
-    justify-content: space-around;
+    align-items: flex-end;
+    justify-content: space-between;
+    background-image: url('../assets/Start-bg.GIF');
 }
 
 .start-scene-left, .start-scene-right {
     height: 100vmin;
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: center;
+    background-position: bottom;
 }
 
 .start-wrapper {
@@ -30,15 +31,16 @@ body {
     max-width: 850px;
 }
 
-.leaderboard {
+/* .leaderboard {
     height: 100vmin;
     width: 30vmin;
-}
+} */
 
 h1 {
-    font-size: 6vmin;
-    font-family: "Press Start 2P", sans-serif;
+    font: 6vmin "Press Start 2P", sans-serif;
     text-align: center;
+    text-shadow: 1px 7px green;
+    color: greenyellow;
 }
 
 .rules {
@@ -47,6 +49,10 @@ h1 {
     justify-content: center;
     text-align: center;
     font: 3.5vmin "Pixelify Sans", sans-serif;
+    background-color: #ffffff;
+    padding: 3vmin;
+    border-radius: 20px;
+    border: 10px solid #e9ff00;
 }
 
 li {
@@ -64,18 +70,17 @@ li {
 }
 
 #start {
-    font-size: 3.5vmin;
+    font: 3.5vmin "Press Start 2P", sans-serif;
     padding: 2vmin 5vmin;
     margin: 4vmin;
     border: none;
     border-radius: 10px;
-    font-family: "Press Start 2P", sans-serif;
+    background-color: fuchsia;
+    box-shadow: 0px 6px 0 3px #b637c1;
+    color: #ffe4fb;
 }
 
-
-
 .game-container {
-    /* visibility: hidden; */
     /* display: flex; */
     display: none;
     flex-direction: column;
@@ -95,8 +100,10 @@ li {
 
 #score-display,
 #lives-display {
-    border: 1px solid black;
-    padding: 1.5vmin;
+    border: 2px solid #e9ff00;
+    padding: 3vmin;
+    background-color: #ffffff;
+    border-radius: 20px;
 }
 
 .game-grid {
@@ -123,14 +130,16 @@ li {
 #mute {
     border: none;
     border-radius: 10px;
-    font-family: "Press Start 2P", sans-serif;
+    font: 1.6vmin "Press Start 2P", sans-serif;
+    padding: 15px;
 }
 
 #pause {
     margin-left: 3vmin;
     border: none;
     border-radius: 10px;
-    font-family: "Press Start 2P", sans-serif;
+    font: 1.6vmin "Press Start 2P", sans-serif;
+    padding: 15px;
 }
 
 /* in-game elements */

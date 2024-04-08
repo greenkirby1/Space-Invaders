@@ -29,13 +29,13 @@ const blks = []
 function makeGrid() {
     for (let i = 0; i < blkCount; i++) {
         const blk = document.createElement('div')
-        blk.innerText = i
+        // blk.innerText = i
         blk.style.width = `${100 / cols}%`
         blk.style.height = `${100 / rows}%`
         blks.push(blk)
-        blks.forEach((blk) => {
-            return blk.classList.add('blocks')
-        })
+        // blks.forEach((blk) => {
+        //     return blk.classList.add('blocks')
+        // })
         grid.append(blk)
         if (i === startPos) {
             blk.classList.add('player')
@@ -75,16 +75,17 @@ let isMuted = false
 
 // ? Cached elements
 const startBtn = document.getElementById('start')
-const pauseBtn = document.getElementById('pause')
 const playAgainBtn = document.getElementById('play-again')
 const muteBtn = document.getElementById('mute')
+const pauseBtn = document.getElementById('pause')
 const scoreEl = document.getElementById('score')
 const livesEl = document.getElementById('lives-display')
 const startScreen = document.querySelector('.start-container')
 const gameStartScreen = document.querySelector('.game-container')
 const endScreen = document.querySelector('.end-container')
-const invaderColors = ['black', 'brown', 'green', 'purple', 'gold']
 const result = document.querySelector('.end-result')
+const finalScore = document.getElementById('final-score')
+const invaderColors = ['black', 'brown', 'green', 'purple', 'gold']
 
 
 
@@ -114,11 +115,6 @@ function init(evt) {
 }
 
 function restart(evt) {
-    // if (endScreen.style.display === 'flex') {
-    //     endScreen.style.display = 'none'
-    //     startScreen.style.display = 'flex'
-    // }
-    // console.log(blks)
     document.location.reload()
 }
 
@@ -139,28 +135,17 @@ function pauseGame(evt) {
 }
 
 function resetGame() {
-    //reset score and lives to game start
+    // reset score and lives to game start
     score = 0
     scoreEl.innerHTML = score
     lives = 3
     livesEl.innerHTML = '❤️'.repeat(lives)
-    // intArr.forEach(int => {
-    //     clearInterval(int)
-    // })
-    // invadersCurrPos = [
-    //     [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
-    //     [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
-    //     [37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47],
-    //     [54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64],
-    //     [71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81]
-    // ]
     setInvaders()
 }
 
-
 function setInvaders() {
-    //set start position for invaders
-    //added different invader types for each row
+    // set start position for invaders
+    // added different invader types for each row
     invadersCurrPos.forEach((rowArr, index) => {
         rowArr.forEach((blkValue, idx) => {
             blks[blkValue].dataset.arrIdx = index
@@ -230,7 +215,6 @@ function invadersMove() {
             })
         })
 
-        // add classes back in
         setInvaders()
     }, 900)
 }
@@ -240,7 +224,6 @@ function invadersShoot() { // has to come after invadersMove() due to logging of
         // Gets random index for invadersCurrPos variable
         currShootRow = Math.floor(Math.random() * invadersCurrPos.length)
         currShootCol = Math.floor(Math.random() * invadersCurrPos[0].length)
-
         // Only gets index with invaders present
         let shooterIdx = invadersCurrPos[currShootRow][currShootCol] + cols
 
@@ -348,14 +331,12 @@ function playerShoot(evt) {
 
 function checkInvadersPresent() {
     let haveInvader = blks.some(blk => {    
-        // return blk.classList.contains('invader') === true
         return blk.classList.contains('black') ||
         blk.classList.contains('brown') ||
         blk.classList.contains('green') ||
         blk.classList.contains('purple') || 
         blk.classList.contains('gold') === true
     })
-    // console.log(haveInvader)
 
     if (haveInvader === false) {
         console.log('you win')
@@ -364,6 +345,7 @@ function checkInvadersPresent() {
         gameStartScreen.style.display = 'none'
         endScreen.style.display = 'flex'
         result.innerHTML = 'You defeated the fly legion!'
+        finalScore.innerHTML = `${score}`
     }
 }
 
@@ -375,6 +357,7 @@ function gameEnd() {
         gameStartScreen.style.display = 'none'
         endScreen.style.display = 'flex'
         result.innerHTML = 'Mourn for the loss of your cake.'
+        finalScore.innerHTML = `${score}`
     }
 }
 
