@@ -18,6 +18,7 @@ const hitSound = document.getElementById('hit')
 const squishSound = document.getElementById('squish')
 const winSound = document.getElementById('win')
 const loseSound = document.getElementById('lose')
+const allSound = document.querySelectorAll('audio')
 const grid = document.querySelector('.game-grid')
 const startPos = 297
 
@@ -124,9 +125,7 @@ function restart(evt) {
 function pauseGame(evt) {
     if (pause === false) {
         pause = true
-        intArr.forEach(int => {
-            clearInterval(int)
-        })
+        intArr.forEach(int => clearInterval(int))
         pauseBtn.innerHTML = 'RESUME'
     } else if (pause === true) {
         pause = false
@@ -343,8 +342,9 @@ function checkInvadersPresent() {
     
     if (haveInvader === false) {
         // console.log('you win')
-        clearInterval(invaderMoveInterval)
-        clearInterval(invaderShootInterval)
+        intArr.forEach(int => clearInterval(int))
+        allSound.forEach(sound => sound.pause())
+        playSound(winSound)
         gameStartScreen.style.display = 'none'
         endScreen.style.display = 'flex'
         endScreen.classList.add('good-end')
@@ -357,8 +357,9 @@ function checkInvadersPresent() {
 function gameEnd() {
     if (lives === 0) {
         // console.log('game end')
-        clearInterval(invaderMoveInterval)
-        clearInterval(invaderShootInterval)
+        intArr.forEach(int => clearInterval(int))
+        allSound.forEach(sound => sound.pause())
+        playSound(loseSound)
         gameStartScreen.style.display = 'none'
         endScreen.style.display = 'flex'
         endScreen.classList.add('bad-end')
@@ -369,12 +370,14 @@ function gameEnd() {
 }
 
 function playSound(sound) {
-    sound.src = `assets/${sound.id}.mp3`
-    if (sound === gameSound) {
-        sound.volume = 0.15
-    } else {
-        sound.volume = 0.3
+    if (sound.currentTime === 0) {
+        if (sound === gameSound) {
+            sound.volume = 0.15
+        } else {
+            sound.volume = 0.3
+        }
     }
+    sound.src = `assets/${sound.id}.mp3`
     sound.play()
 }
 
