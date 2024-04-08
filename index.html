@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,11 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap"
+        rel="stylesheet">
     <script defer src="scripts/app.js" charset="UTF-8"></script>
 </head>
+
 <body>
     <!-- START SCREEN -->
     <section class="start-container">
@@ -26,9 +29,6 @@
             </div>
             <button id="start">START</button>
         </div>
-        <!-- <div class="leaderboard"> -->
-            <!-- stretch goal -->
-        <!-- </div> -->
         <img class="start-scene-right" src="assets/Cake-with-table.GIF" alt="strawberry cake sparkling start screen">
     </section>
 
@@ -49,10 +49,23 @@
 
     <!-- GAMEOVER SCREEN -->
     <section class="end-container">
-        <h2 class="end-result">Mourn for your cake.</h2>
-        <h3 class="final-result">Your final score: <span id="final-score">10000</span></h3>
-        <div class="end-scene"></div>
-        <button id="restart">RESTART</button>
+        <form id="save-score">
+            <h2>Add your score to the leaderboard.</h2>
+            <div class="input-wrapper">
+                <label for="name">Enter name:</label>
+                <input type="text" id="name" name="name" placeholder="Your name">
+            </div>
+            <button id="high-score" type="button" disabled>SUBMIT</button>
+        </form>
+        <div class="mid-wrapper">
+            <h2 class="end-result">Mourn for your cake.</h2>
+            <h3 class="final-result">Your final score: <span id="final-score"></span></h3>
+            <div class="end-scene"></div>
+            <button id="restart">RESTART</button>
+        </div>
+        <div class="leaderboard"> 
+            <!-- leaderboard results -->
+        </div>
     </section>
 
     <audio id="gameplay-music" src="assets/gameplay-music.mp3"></audio>
@@ -61,4 +74,5 @@
     <audio id="win" src="assets/win.mp3"></audio>
     <audio id="lose" src="assets/lose.mp3"></audio>
 </body>
+
 </html>

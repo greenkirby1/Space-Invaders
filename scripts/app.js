@@ -21,6 +21,8 @@ const loseSound = document.getElementById('lose')
 const allSound = document.querySelectorAll('audio')
 const grid = document.querySelector('.game-grid')
 const startPos = 297
+const scoreObj = {}
+
 
 // ? Generate game grid
 const cols = 17
@@ -65,7 +67,9 @@ let pauseInterval
 let pause = false
 const intArr = [1,2]
 let isMuted = false
-
+let playerName 
+let storageKey
+let storageValue
 
 // ~ setInterval time decrement
 //   ~ for (invaders row change === true) {
@@ -87,9 +91,13 @@ const startScreen = document.querySelector('.start-container')
 const gameStartScreen = document.querySelector('.game-container')
 const endScreen = document.querySelector('.end-container')
 const result = document.querySelector('.end-result')
+const endMidPanel = document.querySelector('.mid-wrapper')
 const endPanel = document.querySelector('.end-scene')
 const finalScore = document.getElementById('final-score')
 const invaderColors = ['black', 'brown', 'green', 'purple', 'gold']
+const scoreSubmitBtn = document.getElementById('high-score')
+const nameInput = document.querySelector('#name')
+const leaderboard = document.querySelector('.leaderboard')
 
 
 
@@ -100,6 +108,14 @@ document.addEventListener('keyup', playerShoot)
 restartBtn.addEventListener('click', restart)
 pauseBtn.addEventListener('click', pauseGame)
 muteBtn.addEventListener('click', soundOff)
+nameInput.addEventListener('input', () => {
+    if (nameInput.value.length <= 0) {
+        scoreSubmitBtn.disabled = true
+    } else {
+        scoreSubmitBtn.disabled = false
+    }
+})
+scoreSubmitBtn.addEventListener('click', saveScore)
 
 
 
@@ -347,7 +363,8 @@ function checkInvadersPresent() {
         playSound(winSound)
         gameStartScreen.style.display = 'none'
         endScreen.style.display = 'flex'
-        endScreen.classList.add('good-end')
+        endScreen.classList.add('good-bg')
+        endMidPanel.classList.add('good-end')
         endPanel.classList.add('good')
         result.innerHTML = 'You defeated the fly legion!'
         finalScore.innerHTML = `${score}`
@@ -362,7 +379,8 @@ function gameEnd() {
         playSound(loseSound)
         gameStartScreen.style.display = 'none'
         endScreen.style.display = 'flex'
-        endScreen.classList.add('bad-end')
+        endScreen.classList.add('bad-bg')
+        endMidPanel.classList.add('bad-end')
         endPanel.classList.add('bad')
         result.innerHTML = 'Mourn for the loss of your cake.'
         finalScore.innerHTML = `${score}`
@@ -395,4 +413,25 @@ function soundOff(evt) {
         hitSound.muted = false
         muteBtn.innerHTML = 'MUTE'
     }
+}
+
+function saveScore(evt) {
+    playerName = nameInput.value
+    localStorage.setItem(`${playerName}`, `${score}`)
+}
+
+function getScore() {
+    // retrieved score from localStorage and placed into object
+    for (let i = 0; i < localStorage.length; i++) {
+        storageKey = localStorage.key(i)
+        storageValue = localStorage.getItem(storageKey)
+        scoreObj[storageKey] = storageValue
+    }
+    // console.log(scoreObj)
+}
+
+function addToLeaderboard() {
+    scoreInput = doument.createElement('li')
+    scoreInput.innerHTML = 
+    leaderboard.appendChild = scoreInput
 }

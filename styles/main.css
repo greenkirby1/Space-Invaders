@@ -15,6 +15,10 @@ body {
     align-items: flex-end;
     justify-content: space-between;
     background-image: url('../assets/Start-bg.GIF');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
 }
 
 .start-scene-left, .start-scene-right {
@@ -88,6 +92,10 @@ li {
     display: none;
     flex-direction: column;
     align-items: center;
+    background-image: url('../assets/Gameplay-bg.PNG');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 
@@ -101,7 +109,7 @@ li {
 #score-display,
 #lives-display {
     border: 2px solid #e9ff00;
-    padding: 3vmin;
+    padding: 1.5vmin;
     background-color: #ffffff;
     border-radius: 20px;
 }
@@ -113,10 +121,11 @@ li {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    border: none;
 }
 
-.game-grid>div {
-    border: 1px solid lightgrey;
+.game-grid > div {
+    border: none;
     display: inline-block;
 }
 
@@ -146,9 +155,22 @@ li {
 .end-container {
     /* display: flex; */
     display: none;
-    flex-direction: column;
     align-items: center;
     justify-content: space-around;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items:flex-start;
+    font: 3.5vmin "Pixelify Sans", sans-serif;
+}
+
+.mid-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
 }
 
 #restart {
@@ -167,11 +189,14 @@ li {
     text-align: center;
     text-shadow: 0px 6px 0px #a09211;
     color: #ffee00;
-    background-color: rgb(144, 221, 252);
 }
 
 .good {
+    background-image: url('../assets/Good-scene.PNG');
+}
 
+.good-bg {
+    background-color: rgb(144, 221, 252);
 }
 
 .bad-end {
@@ -179,11 +204,14 @@ li {
     text-align: center;
     text-shadow: 0px 6px 0px #6c6c6c;
     color: white;
-    background-color: black;
 }
 
 .bad {
+    background-image: url('../assets/Bad-scene.PNG');
+}
 
+.bad-bg {
+    background-color: black;
 }
 
 /* * in-game elements */
