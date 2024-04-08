@@ -10,8 +10,8 @@ body {
 
 /* * start screen */
 .start-container {
-    display: none;
-    /* display: flex; */
+    /* display: none; */
+    display: flex;
     align-items: flex-end;
     justify-content: space-between;
     background-image: url('../assets/Start-bg.GIF');
@@ -144,7 +144,8 @@ li {
 
 /* * gameover screen */
 .end-container {
-    display: flex;
+    /* display: flex; */
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;

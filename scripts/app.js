@@ -16,6 +16,8 @@
 const gameSound = document.getElementById('gameplay-music')
 const hitSound = document.getElementById('hit')
 const squishSound = document.getElementById('squish')
+const winSound = document.getElementById('win')
+const loseSound = document.getElementById('lose')
 const grid = document.querySelector('.game-grid')
 const startPos = 297
 
