@@ -9,7 +9,7 @@
 //   - Big invader passes through at the top row which gives players bonus points when destroyed
 //   - Movement of invaders increases with each new row
 //   - Shields that take 10 hits from invader or player lasers
-//   - Highscore board usins localStorage
+////   - Highscore board usins localStorage
 
 
 // ? Constant variables
@@ -65,9 +65,9 @@ let invaderMoveInterval
 let invaderShootInterval
 let pauseInterval
 let pause = false
-const intArr = [1,2]
+const intArr = []
 let isMuted = false
-let playerName 
+let playerName
 let storageKey
 let storageValue
 
@@ -140,15 +140,13 @@ function restart(evt) {
 function pauseGame(evt) {
     if (pause === false) {
         pause = true
-        intArr.forEach(int => clearInterval(int))
+        console.log(intArr)
         pauseBtn.innerHTML = 'RESUME'
     } else if (pause === true) {
         pause = false
-        invadersMove()
-        invadersShoot()
         pauseBtn.innerHTML = 'PAUSE'
-        
-    } 
+
+    }
 }
 
 function resetGame() {
@@ -197,87 +195,98 @@ function invadersMove() {
     let downMove = cols
 
     invaderMoveInterval = setInterval(() => {
-        // border conditions
-        let noMoveRight = invadersCurrPos.some(rowArr => rowArr.some(invaderIdx => invaderIdx % cols === cols - 1))
-        let noMoveLeft = invadersCurrPos.some(rowArr => rowArr.some(invaderIdx => invaderIdx % cols === 0))
-        let noMoveDown = invadersCurrPos.some(rowArr => rowArr.some(invaderIdx => invaderIdx > blks.length - 2 * cols))
+        if (!pause) {
+            // border conditions
+            let noMoveRight = invadersCurrPos.some(rowArr => rowArr.some(invaderIdx => invaderIdx % cols === cols - 1))
+            let noMoveLeft = invadersCurrPos.some(rowArr => rowArr.some(invaderIdx => invaderIdx % cols === 0))
+            let noMoveDown = invadersCurrPos.some(rowArr => rowArr.some(invaderIdx => invaderIdx > blks.length - 2 * cols))
 
-        // remove classes from existing position
-        invadersCurrPos.forEach(rowArr => {
-            rowArr.forEach(blkValue => {
-                blks[blkValue].classList.remove(...invaderColors)
-                blks[blkValue].dataset.arrIdx = undefined
-                blks[blkValue].dataset.rowIdx = undefined
+            // remove classes from existing position
+            invadersCurrPos.forEach(rowArr => {
+                rowArr.forEach(blkValue => {
+                    blks[blkValue].classList.remove(...invaderColors)
+                    blks[blkValue].dataset.arrIdx = undefined
+                    blks[blkValue].dataset.rowIdx = undefined
+                })
             })
-        })
 
-        // update all invaders position
-        invadersCurrPos.forEach((rowArr, index) => {
-            rowArr.forEach((blkValue, idx) => {
-                if (noMoveDown === true) {
-                    clearInterval(invaderMoveInterval)
-                    console.log('no move down')
-                    lives = 0
-                    livesEl.innerHTML = '❤️'.repeat(lives)
-                    livesEl.classList.add('goo')
-                    setTimeout(gameEnd(), 50)
-                } else if (noMoveLeft === true) {
-                    sideMove = 1
-                    invadersCurrPos[index][idx] += downMove
-                } else if (noMoveRight === true) {
-                    sideMove = -1
-                    invadersCurrPos[index][idx] += downMove
-                }
-                invadersCurrPos[index][idx] += sideMove
+            // update all invaders position
+            invadersCurrPos.forEach((rowArr, index) => {
+                rowArr.forEach((blkValue, idx) => {
+                    if (noMoveDown === true) {
+                        clearInterval(invaderMoveInterval)
+                        console.log('no move down')
+                        lives = 0
+                        livesEl.innerHTML = '❤️'.repeat(lives)
+                        livesEl.classList.add('goo')
+                        setTimeout(gameEnd(), 50)
+                    } else if (noMoveLeft === true) {
+                        sideMove = 1
+                        invadersCurrPos[index][idx] += downMove
+                    } else if (noMoveRight === true) {
+                        sideMove = -1
+                        invadersCurrPos[index][idx] += downMove
+                    }
+                    invadersCurrPos[index][idx] += sideMove
+                })
             })
-        })
 
-        setInvaders()
+            setInvaders()
+        }
     }, 900)
+    intArr.push(invaderMoveInterval)
 }
 
 function invadersShoot() { // has to come after invadersMove() due to logging of new positions
     invaderShootInterval = setInterval(() => {
-        // Gets random index for invadersCurrPos variable
-        currShootRow = Math.floor(Math.random() * invadersCurrPos.length)
-        currShootCol = Math.floor(Math.random() * invadersCurrPos[0].length)
-        // Only gets index with invaders present
-        let shooterIdx = invadersCurrPos[currShootRow][currShootCol] + cols
+        if (!pause) {
+            // Gets random index for invadersCurrPos variable
+            currShootRow = Math.floor(Math.random() * invadersCurrPos.length)
+            currShootCol = Math.floor(Math.random() * invadersCurrPos[0].length)
+            // Only gets index with invaders present
+            let shooterIdx = invadersCurrPos[currShootRow][currShootCol] + cols
 
-        blks[shooterIdx]?.classList.add('goo-shoot')
-        squishSound.play()
-        console.log('sound play')
-        let interval = setInterval(() => {
-            if (shooterIdx < playerCurrPos) {
-                blks[shooterIdx]?.classList.remove('goo-shoot')
-                shooterIdx += cols
-                // console.log(shooterIdx)
-                blks[shooterIdx]?.classList.add('goo-shoot')
-                if (blks[shooterIdx]?.classList.contains('player')) {
-                    blks[shooterIdx].classList.add('goo')
-                    lives--
-                    livesEl.innerHTML = '❤️'.repeat(lives)
-                    blks[shooterIdx].classList.remove('goo-shoot')
-                    gameEnd()
-                    setTimeout(() => {
-                        blks[shooterIdx].classList.remove('goo')
-                    }, 100)
+            blks[shooterIdx]?.classList.add('goo-shoot')
+            squishSound.play()
+            console.log('sound play')
+            let interval = setInterval(() => {
+                if (!pause) {
+                    if (shooterIdx < playerCurrPos) {
+                        blks[shooterIdx]?.classList.remove('goo-shoot')
+                        shooterIdx += cols
+                        // console.log(shooterIdx)
+                        blks[shooterIdx]?.classList.add('goo-shoot')
+                        if (blks[shooterIdx]?.classList.contains('player')) {
+                            blks[shooterIdx].classList.add('goo')
+                            lives--
+                            livesEl.innerHTML = '❤️'.repeat(lives)
+                            blks[shooterIdx].classList.remove('goo-shoot')
+                            gameEnd()
+                            setTimeout(() => {
+                                blks[shooterIdx].classList.remove('goo')
+                            }, 100)
+                        }
+                    } else {
+                        blks[shooterIdx]?.classList.remove('goo-shoot')
+                    }
                 }
-            } else {
-                blks[shooterIdx]?.classList.remove('goo-shoot')
-            }
-        }, 400)
+            }, 400)
+            intArr.push(interval)
+        }
     }, 1200)
+    intArr.push(invaderShootInterval)
 }
 
 function playerMove(evt) {
-    blks[playerCurrPos].classList.remove('player')
-    if (evt.code === 'ArrowLeft' && playerCurrPos !== 289) {
-        playerCurrPos--
-    } else if (evt.code === 'ArrowRight' && playerCurrPos !== 305) {
-        playerCurrPos++
+    if (!pause) {
+        blks[playerCurrPos].classList.remove('player')
+        if (evt.code === 'ArrowLeft' && playerCurrPos !== 289) {
+            playerCurrPos--
+        } else if (evt.code === 'ArrowRight' && playerCurrPos !== 305) {
+            playerCurrPos++
+        }
+        blks[playerCurrPos].classList.add('player')
     }
-    blks[playerCurrPos].classList.add('player')
 }
 
 function playerShoot(evt) {
@@ -286,75 +295,78 @@ function playerShoot(evt) {
     if (evt.code === 'Space') {
         blks[shootOrigin].classList.add('swat')
         let interval = setInterval(() => {
-            blks[shootOrigin]?.classList.remove('swat')
-            // const swatNum = document.querySelectorAll('.swat')
-            if (shootOrigin > cols - 1) {
-                shootOrigin -= cols
-                blks[shootOrigin].classList.add('swat')
-                if (blks[shootOrigin].classList.contains('invader')) {
-                    blks[shootOrigin].classList.remove('invader')
-                    let el = blks[shootOrigin]
-                    invadersCurrPos[el.dataset.arrIdx]?.splice(el.dataset.rowIdx, 1)
+            if (!pause) {
+                blks[shootOrigin]?.classList.remove('swat')
+                // const swatNum = document.querySelectorAll('.swat')
+                if (shootOrigin > cols - 1) {
+                    shootOrigin -= cols
+                    blks[shootOrigin].classList.add('swat')
+                    if (blks[shootOrigin].classList.contains('invader')) {
+                        blks[shootOrigin].classList.remove('invader')
+                        let el = blks[shootOrigin]
+                        invadersCurrPos[el.dataset.arrIdx]?.splice(el.dataset.rowIdx, 1)
+                    }
+                    if (blks[shootOrigin].classList.contains('black')) {
+                        playSound(hitSound)
+                        score += 100
+                        scoreEl.innerHTML = score
+                        blks[shootOrigin].classList.remove('black', 'swat')
+                        clearInterval(interval)
+                        blks[shootOrigin].classList.add('dead-fly')
+                    } else if (blks[shootOrigin].classList.contains('brown')) {
+                        playSound(hitSound)
+                        score += 200
+                        scoreEl.innerHTML = score
+                        blks[shootOrigin].classList.remove('brown', 'swat')
+                        clearInterval(interval)
+                        blks[shootOrigin].classList.add('dead-fly')
+
+                    } else if (blks[shootOrigin].classList.contains('green')) {
+                        playSound(hitSound)
+                        score += 300
+                        scoreEl.innerHTML = score
+                        blks[shootOrigin].classList.remove('green', 'swat')
+                        clearInterval(interval)
+                        blks[shootOrigin].classList.add('dead-fly')
+
+                    } else if (blks[shootOrigin].classList.contains('purple')) {
+                        playSound(hitSound)
+                        score += 500
+                        scoreEl.innerHTML = score
+                        blks[shootOrigin].classList.remove('purple', 'swat')
+                        clearInterval(interval)
+                        blks[shootOrigin].classList.add('dead-fly')
+
+                    } else if (blks[shootOrigin].classList.contains('gold')) {
+                        playSound(hitSound)
+                        score += 1000
+                        scoreEl.innerHTML = score
+                        blks[shootOrigin].classList.remove('gold', 'swat')
+                        clearInterval(interval)
+                        blks[shootOrigin].classList.add('dead-fly')
+                    }
+                    setTimeout(() => {
+                        blks[shootOrigin].classList.remove('dead-fly')
+                    }, 85)
+                    checkInvadersPresent()
+                } else {
+                    clearInterval(interval)
                 }
-                if (blks[shootOrigin].classList.contains('black')) {
-                    playSound(hitSound)
-                    score += 100
-                    scoreEl.innerHTML = score
-                    blks[shootOrigin].classList.remove('black', 'swat')
-                    clearInterval(interval)
-                    blks[shootOrigin].classList.add('dead-fly')
-                } else if (blks[shootOrigin].classList.contains('brown')) {
-                    playSound(hitSound)
-                    score += 200
-                    scoreEl.innerHTML = score
-                    blks[shootOrigin].classList.remove('brown', 'swat')
-                    clearInterval(interval)
-                    blks[shootOrigin].classList.add('dead-fly')
-                    
-                } else if (blks[shootOrigin].classList.contains('green')) {
-                    playSound(hitSound)
-                    score += 300
-                    scoreEl.innerHTML = score
-                    blks[shootOrigin].classList.remove('green', 'swat')
-                    clearInterval(interval)
-                    blks[shootOrigin].classList.add('dead-fly')
-                    
-                } else if (blks[shootOrigin].classList.contains('purple')) {
-                    playSound(hitSound)
-                    score += 500
-                    scoreEl.innerHTML = score
-                    blks[shootOrigin].classList.remove('purple', 'swat')
-                    clearInterval(interval)
-                    blks[shootOrigin].classList.add('dead-fly')
-                    
-                } else if (blks[shootOrigin].classList.contains('gold')) {
-                    playSound(hitSound)
-                    score += 1000
-                    scoreEl.innerHTML = score
-                    blks[shootOrigin].classList.remove('gold', 'swat')
-                    clearInterval(interval)
-                    blks[shootOrigin].classList.add('dead-fly')
-                }
-                setTimeout(() => {
-                    blks[shootOrigin].classList.remove('dead-fly')
-                }, 85)
-                checkInvadersPresent()
-            } else {
-                clearInterval(interval)
             }
         }, 100)
+        intArr.push(interval)
     }
 }
 
 function checkInvadersPresent() {
-    let haveInvader = blks.some(blk => {    
+    let haveInvader = blks.some(blk => {
         return blk.classList.contains('black') ||
-        blk.classList.contains('brown') ||
-        blk.classList.contains('green') ||
-        blk.classList.contains('purple') || 
-        blk.classList.contains('gold') === true
+            blk.classList.contains('brown') ||
+            blk.classList.contains('green') ||
+            blk.classList.contains('purple') ||
+            blk.classList.contains('gold') === true
     })
-    
+
     if (haveInvader === false) {
         // console.log('you win')
         intArr.forEach(int => clearInterval(int))
@@ -364,12 +376,9 @@ function checkInvadersPresent() {
         endScreen.style.display = 'flex'
         endScreen.classList.add('good-bg')
         endMidPanel.classList.add('good-end')
-        endPanel.classList.add('good')
         result.innerHTML = 'You defeated the fly legion!'
         finalScore.innerHTML = `${score}`
     }
-    getScore()
-    addToLeaderboard()
 }
 
 function gameEnd() {
@@ -382,12 +391,9 @@ function gameEnd() {
         endScreen.style.display = 'flex'
         endScreen.classList.add('bad-bg')
         endMidPanel.classList.add('bad-end')
-        endPanel.classList.add('bad')
         result.innerHTML = 'Mourn for the loss of your cake.'
         finalScore.innerHTML = `${score}`
     }
-    getScore()
-    addToLeaderboard()
 }
 
 function playSound(sound) {
@@ -422,6 +428,7 @@ function saveScore(evt) {
     playerName = nameInput.value
     localStorage.setItem(`${playerName}`, `${score}`)
 
+
 }
 
 function getScore() {
@@ -435,15 +442,16 @@ function getScore() {
 
 function addToLeaderboard() {
     const sortedScoreObj = Object.fromEntries(
-        Object.entries(scoreObj).sort((a, b) => a[1] - b[1]).reverse()
+        Object.entries(scoreObj).sort((a, b) => a[1] - b[1]).reverse().splice(0, 5)
     )
     // console.log(sortedScoreObj)
     for (const [key, value] of Object.entries(sortedScoreObj)) {
-        // if (scoreList.length < 6) {
-            scoreInput = document.createElement('li')
-            scoreList.appendChild(scoreInput)
-            scoreInput.innerHTML = `${key}         ${value}`
-            console.log(scoreInput)
-        // }
+        scoreInput = document.createElement('li')
+        scoreList.appendChild(scoreInput)
+        scoreInput.innerHTML = `${key}         ${value}`
+        console.log(scoreInput)
     }
 }
+
+getScore()
+addToLeaderboard()

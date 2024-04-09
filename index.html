@@ -50,7 +50,7 @@
     <!-- GAMEOVER SCREEN -->
     <section class="end-container">
         <form id="save-score">
-            <h2>Add your score to the leaderboard.</h2>
+            <h2>Add your score.</h2>
             <div class="input-wrapper">
                 <label for="name">Enter name:</label>
                 <input type="text" id="name" name="name" placeholder="Your name">
@@ -58,14 +58,16 @@
             <button id="high-score" type="button" disabled>SUBMIT</button>
         </form>
         <div class="mid-wrapper">
-            <h2 class="end-result">Mourn for your cake.</h2>
-            <h3 class="final-result">Your final score: <span id="final-score"></span></h3>
-            <div class="end-scene"></div>
+            <div class="end-scene">
+                <h2 class="end-result"></h2>
+                <h3 class="final-result">Your final score: <span id="final-score"></span></h3>
+            </div>
             <button id="restart">RESTART</button>
         </div>
         <div class="leaderboard"> 
             <!-- leaderboard results -->
             <ol>
+                <h3>Top 6 Scores</h3>
                 <!-- list of highscores -->
             </ol>
         </div>
