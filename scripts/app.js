@@ -204,7 +204,7 @@ function invadersMove() {
             // remove classes from existing position
             invadersCurrPos.forEach(rowArr => {
                 rowArr.forEach(blkValue => {
-                    blks[blkValue].classList.remove(...invaderColors)
+                    blks[blkValue].classList.remove(...invaderColors, 'invader')
                     blks[blkValue].dataset.arrIdx = undefined
                     blks[blkValue].dataset.rowIdx = undefined
                 })
