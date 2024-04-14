@@ -34,7 +34,7 @@ const blks = []
 function makeGrid() {
     for (let i = 0; i < blkCount; i++) {
         const blk = document.createElement('div')
-        // blk.innerText = i
+        blk.innerText = i
         blk.style.width = `${100 / cols}%`
         blk.style.height = `${100 / rows}%`
         blks.push(blk)
@@ -280,9 +280,9 @@ function invadersShoot() { // has to come after invadersMove() due to logging of
 function playerMove(evt) {
     if (!pause) {
         blks[playerCurrPos].classList.remove('player')
-        if (evt.code === 'ArrowLeft' && playerCurrPos !== 289) {
+        if (evt.code === 'ArrowLeft' && playerCurrPos !== blks.length - cols) {
             playerCurrPos--
-        } else if (evt.code === 'ArrowRight' && playerCurrPos !== 305) {
+        } else if (evt.code === 'ArrowRight' && playerCurrPos !== blks.length - 1) {
             playerCurrPos++
         }
         blks[playerCurrPos].classList.add('player')
