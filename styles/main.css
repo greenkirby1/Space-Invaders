@@ -18,10 +18,11 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    height: 100vh;
 }
 
 .start-scene-left, .start-scene-right {
-    height: 100vmin;
+    height: 100%;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: bottom;
@@ -33,14 +34,19 @@ body {
     align-items: center;
     justify-content: center;
     max-width: 850px;
+
 }
 
 
 h1 {
-    font: 6vmin "Press Start 2P", sans-serif;
+    font: 5vmin "Press Start 2P", sans-serif;
     text-align: center;
     text-shadow: 1px 7px green;
     color: greenyellow;
+}
+
+h2 {
+    margin: 0;
 }
 
 .rules {
@@ -48,9 +54,9 @@ h1 {
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    font: 3.5vmin "Pixelify Sans", sans-serif;
+    font: 2.5vmin "Pixelify Sans", sans-serif;
     background-color: #ffffff;
-    padding: 3vmin;
+    padding: 1.5vmin 3vmin;
     border-radius: 20px;
     border: 10px solid #e9ff00;
 }
@@ -61,7 +67,7 @@ h1 {
     align-items: center;
     justify-content: space-evenly;
     padding: 1.5vmin;
-    font: 600 3vmin "Press Start 2P", sans-serif;
+    font: 600 2vmin "Press Start 2P", sans-serif;
     color: yellowgreen;
 }
 
@@ -95,6 +101,7 @@ h1 {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    height: 100vh;
 }
 
 .top-wrapper {
@@ -164,9 +171,10 @@ h1 {
 .end-container {
     /* display: flex; */
     display: none;
-    height: 100vmin;
+    height: 100vh;
     align-items: center;
     justify-content: space-evenly;
+    overflow: hidden;
 }
 
 form {
@@ -304,7 +312,7 @@ ol > h3 {
 .dead-fly,
 .goo {
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: contain;
     background-position: center;
 }
 
